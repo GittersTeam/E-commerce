@@ -66,29 +66,29 @@ const addProduct = (req, res) => {
         });
 
 }
-// const updateProduct = (req, res) => {
-//     const productID = req.params.id;
+const updateProduct = (req, res) => {
+    const productID = req.params.id;
 
-//     Product.update(req.body, {
-//         where: { productID: productID }
-//     })
-//         .then(num => {
-//             if (num == 1) {
-//                 res.send({
-//                     message: "Product was updated successfully."
-//                 });
-//             } else {
-//                 res.send({
-//                     message: `Cannot update product with id=${id}. Maybe product was not found or req.body is empty!`
-//                 });
-//             }
-//         })
-//         .catch(err => {
-//             res.status(500).send({
-//                 message: "Error updating product with id=" + id
-//             });
-//         });
-// }
+    Product.update(req.body, {
+        where: { productID: productID }
+    })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Product was updated successfully."
+                });
+            } else {
+                res.send({
+                    message: `Cannot update product with id=${productID}. Maybe product was not found or req.body is empty!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error updating product with id=" + productID
+            });
+        });
+}
 const deleteProductByID = (req, res) => {
     const productID = req.params.id;
 
@@ -114,4 +114,4 @@ const deleteProductByID = (req, res) => {
 }
 
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, getProductByID };
+module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID };
