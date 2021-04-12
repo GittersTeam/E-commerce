@@ -6,8 +6,8 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement: true,
 
         },
-        productName: {
-            type: Sequelize.STRING(20),
+        name: {
+            type: Sequelize.STRING,
             allowNull: false,
         },
         // productPhoto: {
@@ -16,11 +16,16 @@ module.exports = (sequelize, Sequelize) => {
 
         // },
         price: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.DECIMAL(15,2),
             allowNull: false,
 
         },
-        productSize: {
+        currency: {
+            type: Sequelize.CHAR(3),
+            allowNull: false,
+        },
+
+        size: {
             type: Sequelize.INTEGER,
             allowNull: false
 

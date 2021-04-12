@@ -42,12 +42,12 @@ const addProduct = (req, res) => {
 
     const product = {
         productID: req.body.productID,
-        productName: req.body.productName,
+        name: req.body.name,
         price: req.body.price,
-        productSize: req.body.productSize,
+        currency: req.body.currency,
+        size: req.body.size,
         description: req.body.description,
         brandID: req.body.brandID,
-
 
     };
     Product.create(product)
