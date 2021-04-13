@@ -1,4 +1,6 @@
 var fs = require('fs');
+const db = require("../models");
+const Product = db.products;
 
 const multer = require('multer');
 var path = require('path');
@@ -30,16 +32,21 @@ const uploadImage = function (request, response, next) {
         else if (err) {
             return response.send(err);
         }
-
+       
         response.send({
             "image_name": request.file.filename,
-            "image_full_path": request.file.path,
-            "view_image": "http://localhost:3000/images/" + request.file.filename
+            // "image_full_path": request.file.path,
+            // "view_image": "http://localhost:7500/images/" + request.file.filename
 
         });
+        // Product.update({ photo: null }, {
+        //     where: { photo: request.file.filename }
+        // })
+       
+
+
     });
 }
-
 
 
 module.exports = { uploadImage };
