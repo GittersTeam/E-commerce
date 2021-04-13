@@ -23,8 +23,8 @@ const getAllProducts = (req, res) => {
 
 }
 const getProductByID = (req, res) => {
-
-    Product.findByPk(req.params.id)
+    const productID = req.params.id;
+    Product.findByPk(productID)
         .then(data => {
             res.send({
                 data: data,
@@ -50,7 +50,7 @@ const addProduct = (req, res) => {
         color: req.body.color,
         description: req.body.description,
         barCodeNumber: req.body.barCodeNumber,
-        
+
 
     };
     // Product.update({ photo: null }, {
