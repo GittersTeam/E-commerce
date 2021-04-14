@@ -1,8 +1,66 @@
 const db = require("../models");
 const Product = db.products;
-const up = require("./upload-photo");
+var fs = require('fs');
+const multer = require('multer');
+var path = require('path');
+const helpers = require('./helpers');
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/images/products');
+    },
+    // By default, multer removes file extensions so let's add them back
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
 
+const addProduct = (req, res) => {
+    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).array('photo', 2);
+    upload(req, res, function (err) {
+
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
+        }
+        else if (!req.files) {
+            return res.send('Please select an image to upload');
+        }
+        else if (err instanceof multer.MulterError) {
+            return res.send(err);
+        }
+        else if (err) {
+            return res.send(err);
+        }
+
+    const product = {
+        name: req.body.name,
+        price: req.body.price,
+        currency: req.body.currency,
+        size: req.body.size,
+        color: req.body.color,
+        description: req.body.description,
+        barCodeNumber: req.body.barCodeNumber,
+        photo: req.files ? req.files.map(file => file.path ) : []
+
+    };
+    Product.create(product)
+        .then(data => {
+            res.send({
+                'data': data,
+                'message': "product was added successfully",
+                'status': 200
+            });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while adding the product."
+            });
+        });
+        
+    });
+
+}
 const getAllProducts = (req, res) => {
     Product.findAll()
         .then(data => {
@@ -38,35 +96,7 @@ const getProductByID = (req, res) => {
         });
 
 }
-const addProduct = (req, res) => {
-    const photo = up.uploadImage
-    const product = {
-        name: req.body.name,
-        price: req.body.price,
-        currency: req.body.currency,
-        size: req.body.size,
-        color: req.body.color,
-        description: req.body.description,
-        barCodeNumber: req.body.barCodeNumber,
-        photo: photo
 
-    };
-    Product.create(product)
-        .then(data => {
-            res.send({
-                'data': data,
-                'message': "product was added successfully",
-                'status': 200
-            });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while adding the product."
-            });
-        });
-
-}
 const updateProduct = (req, res) => {
     const productID = req.params.id;
 
