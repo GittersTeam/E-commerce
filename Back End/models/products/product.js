@@ -3,9 +3,10 @@ module.exports = (sequelize, DataTypes) => {
         productID: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
         },
         name: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING(20),
             allowNull: false,
         },
         photo: {
@@ -41,16 +42,13 @@ module.exports = (sequelize, DataTypes) => {
         barCodeNumber: {
             type: DataTypes.INTEGER(15),
             allowNull: false,
-            unique: 'barCodeNumber',
         },
         brandID: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            unique: 'brandID',
             allowNull: false
 
         },
-    }, {
     });
 
 

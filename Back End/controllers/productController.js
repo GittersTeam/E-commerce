@@ -32,32 +32,32 @@ const addProduct = (req, res) => {
             return res.send(err);
         }
 
-    const product = {
-        name: req.body.name,
-        price: req.body.price,
-        currency: req.body.currency,
-        size: req.body.size,
-        color: req.body.color,
-        description: req.body.description,
-        barCodeNumber: req.body.barCodeNumber,
-        photo: req.files ? req.files.map(file => file.path ) : []
+        const product = {
+            name: req.body.name,
+            price: req.body.price,
+            currency: req.body.currency,
+            size: req.body.size,
+            color: req.body.color,
+            description: req.body.description,
+            barCodeNumber: req.body.barCodeNumber,
+            photo: req.files ? req.files.map(file => file.path) : []
 
-    };
-    Product.create(product)
-        .then(data => {
-            res.send({
-                'data': data,
-                'message': "product was added successfully",
-                'status': 200
+        };
+        Product.create(product)
+            .then(data => {
+                res.send({
+                    'data': data,
+                    'message': "product was added successfully",
+                    'status': 200
+                });
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while adding the product."
+                });
             });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while adding the product."
-            });
-        });
-        
+
     });
 
 }
@@ -143,6 +143,24 @@ const deleteProductByID = (req, res) => {
             });
         });
 }
+const deleteAllProducts = function (req, res) {
+
+    Product.destroy({
+        where: {},
+        truncate: false
+    })
+        .then(num => {
+            res.send({
+                message: `${num} Products were deleted successfully!`
+            });
+
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error deleting products"
+            });
+        });
+}
 
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID };
+module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts };
