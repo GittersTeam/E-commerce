@@ -16,8 +16,8 @@ const storage = multer.diskStorage({
     }
 });
 
-const uploadImage = function (request, response, next) {
-    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).single('product-pic');
+const uploadPhoto = function (request, response, next) {
+    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).single('productPic');
     upload(request, response, function (err) {
 
         if (request.fileValidationError) {
@@ -34,19 +34,21 @@ const uploadImage = function (request, response, next) {
         }
        
         response.send({
-            "image_name": request.file.filename,
-            // "image_full_path": request.file.path,
+            // "image_name": request.file.filename,
+            "image_full_path": request.file.path,
             // "view_image": "http://localhost:7500/images/" + request.file.filename
 
         });
-        // Product.update({ photo: null }, {
-        //     where: { photo: request.file.filename }
-        // })
-       
-
+    
 
     });
 }
+const ram = multer({
+    storage: multer.MemoryStorage, // we want to save parsed body in RAM
+    onError: function(err, next) {
+        console.log(err);
+        next(err);
+    }
+});
 
-
-module.exports = { uploadImage };
+module.exports = { uploadPhoto };

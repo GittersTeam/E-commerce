@@ -3,6 +3,6 @@ var router = express.Router();
 
 
 const uploadPhotoController = require("../controllers/upload-photo");
-router.post('/photo', uploadPhotoController.uploadImage);
+router.post('/photo', uploadPhotoController.uploadPhoto);
 
 module.exports = router;

@@ -23,8 +23,7 @@ const getAllProducts = (req, res) => {
 
 }
 const getProductByID = (req, res) => {
-    const productID = req.params.id;
-    Product.findByPk(productID)
+    Product.findOne({ where: { productID: req.params.id } })
         .then(data => {
             res.send({
                 data: data,
@@ -40,8 +39,7 @@ const getProductByID = (req, res) => {
 
 }
 const addProduct = (req, res) => {
-    // const photo = up.uploadImage
-    // console.log(up.uploadImage.image_name)
+    const photo = up.uploadImage
     const product = {
         name: req.body.name,
         price: req.body.price,
@@ -50,12 +48,9 @@ const addProduct = (req, res) => {
         color: req.body.color,
         description: req.body.description,
         barCodeNumber: req.body.barCodeNumber,
-
+        photo: photo
 
     };
-    // Product.update({ photo: null }, {
-    //     where: { photo: JSON. stringify(up.uploadImage)  }
-    // })
     Product.create(product)
         .then(data => {
             res.send({
