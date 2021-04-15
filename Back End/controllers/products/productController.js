@@ -42,7 +42,12 @@ const addProduct = (req, res) => {
             color: req.body.color,
             description: req.body.description,
             barCodeNumber: req.body.barCodeNumber,
-            photo: req.files ? req.files.map(file => file.path) : []
+            photo: req.files ? req.files.map((element, index) => {
+                let temp = {}
+                temp[index] = element.path.replace(/\\/g, "/")
+                return temp
+            }) : {},
+
 
         };
         Product.create(product)

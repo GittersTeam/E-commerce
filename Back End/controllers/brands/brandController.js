@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 });
 
 const addBrand = (req, res) => {
-    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).any('logo', 1);
+    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).array('logo', 1);
     upload(req, res, function (err) {
 
         if (req.fileValidationError) {
