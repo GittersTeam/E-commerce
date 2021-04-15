@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.JSON,
             allowNull: true,
         }
-    });
+    }, { tableName: "brands" }
+
+    );
 
 
     return Brand;

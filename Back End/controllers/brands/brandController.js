@@ -1,5 +1,5 @@
-const db = require("../models");
-const Product = db.products;
+const db = require("../../models");
+const Brand = db.brands;
 var fs = require('fs');
 const multer = require('multer');
 var path = require('path');
@@ -7,7 +7,7 @@ const helpers = require('./helpers');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/images/products');
+        cb(null, 'public/images/brands');
     },
     // By default, multer removes file extensions so let's add them back
     filename: function (req, file, cb) {
@@ -15,8 +15,8 @@ const storage = multer.diskStorage({
     }
 });
 
-const addProduct = (req, res) => {
-    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).array('photo', 2);
+const addBrand = (req, res) => {
+    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).any('logo', 1);
     upload(req, res, function (err) {
 
         if (req.fileValidationError) {
@@ -32,41 +32,35 @@ const addProduct = (req, res) => {
             return res.send(err);
         }
 
-        const product = {
+        const brand = {
             name: req.body.name,
-            price: req.body.price,
-            currency: req.body.currency,
-            size: req.body.size,
-            color: req.body.color,
-            description: req.body.description,
-            barCodeNumber: req.body.barCodeNumber,
-            photo: req.files ? req.files.map(file => file.path) : []
+            logo: req.files ? req.files.map(file => file.path) : []
 
         };
-        Product.create(product)
+        Brand.create(brand)
             .then(data => {
                 res.send({
                     'data': data,
-                    'message': "product was added successfully",
+                    'message': "brand was added successfully",
                     'status': 200
                 });
             })
             .catch(err => {
                 res.status(500).send({
                     message:
-                        err.message || "Some error occurred while adding the product."
+                        err.message || "Some error occurred while adding the brand."
                 });
             });
 
     });
 
 }
-const getAllProducts = (req, res) => {
-    Product.findAll()
+const getAllBrands = (req, res) => {
+    Brand.findAll()
         .then(data => {
             res.send({
                 'data': data,
-                'message': "list of products",
+                'message': "list of brands",
                 'status': 200
             });
 
@@ -74,93 +68,93 @@ const getAllProducts = (req, res) => {
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving products."
+                    err.message || "Some error occurred while retrieving brands."
             });
         });
 
 
 }
-const getProductByID = (req, res) => {
-    Product.findOne({ where: { productID: req.params.id } })
+const getBrandByID = (req, res) => {
+    Brand.findOne({ where: { brandID: req.params.id } })
         .then(data => {
             res.send({
                 data: data,
-                msg: "The product was found successfully "
+                msg: "The brand was found successfully "
             });
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving the product."
+                    err.message || "Some error occurred while retrieving the brand."
             });
         });
 
 }
 
-const updateProduct = (req, res) => {
-    const productID = req.params.id;
+const updateBrand = (req, res) => {
+    const brandID = req.params.id;
 
-    Product.update(req.body, {
-        where: { productID: productID }
+    Brand.update(req.body, {
+        where: { brandID: brandID }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Product was updated successfully."
+                    message: "Brand was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update product with id=${productID}. Maybe product was not found or req.body is empty!`
+                    message: `Cannot update brand with id=${brandID}. Maybe brand was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating product with id=" + productID
+                message: "Error updating brand with id=" + brandID
             });
         });
 }
-const deleteProductByID = (req, res) => {
-    const productID = req.params.id;
+const deleteBrandByID = (req, res) => {
+    const brandID = req.params.id;
 
-    Product.destroy({
-        where: { productID: productID }
+    Brand.destroy({
+        where: { brandID: brandID }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "The product was deleted successfully."
+                    message: "The brand was deleted successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot delete product, Maybe it was not found!`
+                    message: `Cannot delete brand, Maybe it was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error deleting product"
+                message: "Error deleting brand"
             });
         });
 }
-const deleteAllProducts = function (req, res) {
+const deleteAllBrands = function (req, res) {
 
-    Product.destroy({
+    Brand.destroy({
         where: {},
         truncate: false
     })
         .then(num => {
             res.send({
-                message: `${num} Products were deleted successfully!`
+                message: `${num} Brands were deleted successfully!`
             });
 
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error deleting products"
+                message: "Error deleting brands"
             });
         });
 }
 
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts };
+module.exports = { getAllBrands, addBrand, getBrandByID, deleteBrandByID, updateBrand, deleteAllBrands };

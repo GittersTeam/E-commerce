@@ -23,4 +23,7 @@ db.sequelize = sequelize;
 db.products = require("./products/product.js")(sequelize, Sequelize);
 db.brands = require("./brands/brand.js")(sequelize, Sequelize);
 
+db.products.belongsTo(db.brands, { foreignKey: 'brandID' });
+db.brands.hasMany(db.products, { foreignKey: 'brandID' });
+
 module.exports = db;

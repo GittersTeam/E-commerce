@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
 
         },
+        cost: {
+            type: DataTypes.DECIMAL(15, 2),
+            allowNull: false,
+
+        },
         currency: {
             type: DataTypes.CHAR(3),
             defaultValue: 'NIS',
@@ -46,10 +51,14 @@ module.exports = (sequelize, DataTypes) => {
         brandID: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            allowNull: false
+            allowNull: false,
+            references: {
+                model: 'brands', 
+                key: 'brandID'
+            }
 
-        },
-    });
+        }
+    }, { tableName: "products" });
 
 
     return Product;
