@@ -90,10 +90,17 @@ const getAllProducts = (req, res) => {
 const getProductByID = (req, res) => {
     Product.findOne({ where: { productID: req.params.id } })
         .then(data => {
-            res.send({
-                data: data,
-                msg: "The product was found successfully "
-            });
+            if (data == 1) {
+                res.send({
+                    data: data,
+                    msg: "The product was found successfully "
+                });
+
+            } else {
+                res.send({
+                    message: `Cannot get product. Maybe product was not found or req.body is empty!`
+                });
+            }
         })
         .catch(err => {
             res.status(500).send({
