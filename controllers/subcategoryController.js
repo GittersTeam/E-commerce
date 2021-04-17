@@ -10,7 +10,7 @@ const createSubcategories = async (req, res) => {
         const cate = await Category.findOne({
             where: { uuid: categoryUuid }
         })
-        const subcategory = await Subcategory.create({ subCategoryName:name, icon, categoryId: cate.uuid });
+        const subcategory = await Subcategory.create({ name, icon, categoryId: cate.uuid });
         return res.json(subcategory);
     } catch (err) {
         console.log(err);

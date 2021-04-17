@@ -5,6 +5,9 @@ const  Subcategories = db.subcategories;
 const getAllDepartments = function (req, res) {
     Department.findAll({
         where: {},
+        include: {model: Category, as: 'categories', include: [
+          {model: Subcategories, as:'subcategories'}
+        ]}
     })
         .then((data) => {
             res.send({

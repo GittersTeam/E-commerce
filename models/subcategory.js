@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             allowNull: false,
           },
-          subCategoryName: {
+          name: {
             type: Sequelize.STRING,
             allowNull: false,
             validate: {
