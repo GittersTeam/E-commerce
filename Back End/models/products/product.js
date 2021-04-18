@@ -30,11 +30,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
 
-        size: {
-            type: DataTypes.JSON,
-            allowNull: false
-
-        },
         color: {
             type: DataTypes.JSON,
             allowNull: false
@@ -53,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4,
             allowNull: false,
             references: {
-                model: 'brands', 
+                model: 'brands',
                 key: 'brandID'
             }
 

@@ -22,9 +22,9 @@ const addProduct = (req, res) => {
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);
         }
-        else if (!req.files) {
-            return res.send('Please select an image to upload');
-        }
+        // else if (!req.files) {
+        //     return res.send('Please select an image to upload');
+        // }
         else if (err instanceof multer.MulterError) {
             return res.send(err);
         }
@@ -32,21 +32,21 @@ const addProduct = (req, res) => {
             return res.send(err);
         }
 
+
         const product = {
             brandID: req.body.brandID,
             name: req.body.name,
             price: req.body.price,
             cost: req.body.cost,
             currency: req.body.currency,
-            size: req.body.size,
             color: req.body.color,
             description: req.body.description,
             barCodeNumber: req.body.barCodeNumber,
-            photo: req.files ? req.files.map((element, index) => {
-                let temp = {}
-                temp[index] = element.path.replace(/\\/g, "/")
-                return temp
-            }) : {},
+            // photo: req.files ? req.files.map((element, index) => {
+            //     let temp = {}
+            //     temp[index] = element.path.replace(/\\/g, "/")
+            //     return temp
+            // }) : {},
 
 
         };
@@ -90,17 +90,12 @@ const getAllProducts = (req, res) => {
 const getProductByID = (req, res) => {
     Product.findOne({ where: { productID: req.params.id } })
         .then(data => {
-            if (data == 1) {
-                res.send({
-                    data: data,
-                    msg: "The product was found successfully "
-                });
+            res.send({
+                data: data,
+                msg: "The product was found successfully "
+            });
 
-            } else {
-                res.send({
-                    message: `Cannot get product. Maybe product was not found or req.body is empty!`
-                });
-            }
+
         })
         .catch(err => {
             res.status(500).send({
@@ -109,6 +104,54 @@ const getProductByID = (req, res) => {
             });
         });
 
+}
+// if (req.body.color.length > 0) {
+//     color = req.color.map(e => {
+//         return { name: e.hex_value }
+//     })
+// }
+const deleteColor = async (req, res) => {
+    const colorName = req.body.colour_name;
+    const id = req.params.id;
+    try {
+        const product = await Product.findOne({ where: { productID: id } })
+        // console.log("lalalalalalalal", product.color);
+        for (let i = 0; i < product.color.length; i++) {
+            if (product.color[i]["colour_name"] == colorName) {
+                product["color"].splice(i, 1);
+            }
+        }
+        Product.update(product.color, {
+            where: { productID: id }
+        })
+        // return res.json(product)
+    }
+    catch (err) {
+        console.log(err);
+        return res.status.json({ error: `Some error occurred while retrieving Department for room with uuid ` })
+    }
+
+
+
+    // Product.update(req.body, {
+    //     where: { productID: productID }
+    // })
+    //     .then(num => {
+    //         if (num == 1) {
+    //             res.send({
+    //                 message: "color was updated successfully."
+    //             });
+    //         } else {
+    //             res.send({
+    //                 message: `Cannot update color !`
+    //             });
+    //         }
+    //     })
+    //     .catch(err => {
+    //         res.status(500).send({
+    //             message: "Error updating color "
+    //         });
+    //     });
 }
 
 const updateProduct = (req, res) => {
@@ -177,4 +220,4 @@ const deleteAllProducts = function (req, res) {
 }
 
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts };
+module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts, deleteColor };

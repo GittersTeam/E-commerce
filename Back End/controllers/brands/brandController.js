@@ -77,16 +77,10 @@ const getAllBrands = (req, res) => {
 const getBrandByID = (req, res) => {
     Brand.findOne({ where: { brandID: req.params.id } })
         .then(data => {
-            if (data == 1) {
-                res.send({
-                    data: data,
-                    msg: "The brand was found successfully "
-                });
-            } else {
-                res.send({
-                    message: `Cannot get brand. Maybe brand was not found or req.body is empty!`
-                });
-            }
+            res.send({
+                data: data,
+                msg: "The brand was found successfully "
+            });
         })
         .catch(err => {
             res.status(500).send({

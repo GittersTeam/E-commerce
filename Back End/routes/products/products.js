@@ -9,6 +9,7 @@ router.post('/products', productController.addProduct);
 router.put('/products/:id', productController.updateProduct);
 router.delete('/products/', productController.deleteAllProducts);
 router.delete('/products/:id', productController.deleteProductByID);
+router.put('/colors/:id', productController.deleteColor);
 
 
 

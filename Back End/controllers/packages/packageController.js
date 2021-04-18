@@ -22,9 +22,9 @@ const addPackage = (req, res) => {
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);
         }
-        // else if (!req.files) {
-        //     return res.send('Please select an image to upload');
-        // }
+        else if (!req.files) {
+            return res.send('Please select an image to upload');
+        }
         else if (err instanceof multer.MulterError) {
             return res.send(err);
         }
@@ -37,11 +37,11 @@ const addPackage = (req, res) => {
             price: req.body.price,
             currency: req.body.currency,
             description: req.body.description,
-            // photo: req.files ? req.files.map((element, index) => {
-            //     let temp = {}
-            //     temp[index] = element.path.replace(/\\/g, "/")
-            //     return temp
-            // }) : {},
+            photo: req.files ? req.files.map((element, index) => {
+                let temp = {}
+                temp[index] = element.path.replace(/\\/g, "/")
+                return temp
+            }) : {},
 
 
         };
@@ -85,18 +85,10 @@ const getAllPackages = (req, res) => {
 const getPackageByID = (req, res) => {
     Package.findOne({ where: { packageID: req.params.id } })
         .then(data => {
-            if (data == 1) {
                 res.send({
                     data: data,
                     msg: "The package was found successfully "
                 });
-            } else {
-                res.send({
-                    message: `Cannot get package. Maybe package was not found or req.body is empty!`
-                });
-            }
-
-
         })
         .catch(err => {
             res.status(500).send({
