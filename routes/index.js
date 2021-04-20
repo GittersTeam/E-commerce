@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
-});
+
+var departmentsRouter = require('./departments/departments');
+var categoriesRouter = require('./categories/categories');
+var subcategoriesRouter = require('./subcategories/subcategories');
+
+router.use('/departments', departmentsRouter);
+router.use('/categories', categoriesRouter);
+router.use('/subcategories', subcategoriesRouter);
 
 module.exports = router;

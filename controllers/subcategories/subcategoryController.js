@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../../models");
 const  Department = db.departments;
 const  Category = db.categories;
 const  Subcategory = db.subcategories;
