@@ -105,11 +105,6 @@ const getProductByID = (req, res) => {
         });
 
 }
-// if (req.body.color.length > 0) {
-//     color = req.color.map(e => {
-//         return { name: e.hex_value }
-//     })
-// }
 const deleteColor = async (req, res) => {
     const colorName = req.body.colour_name;
     const id = req.params.id;
@@ -132,26 +127,6 @@ const deleteColor = async (req, res) => {
     }
 
 
-
-    // Product.update(req.body, {
-    //     where: { productID: productID }
-    // })
-    //     .then(num => {
-    //         if (num == 1) {
-    //             res.send({
-    //                 message: "color was updated successfully."
-    //             });
-    //         } else {
-    //             res.send({
-    //                 message: `Cannot update color !`
-    //             });
-    //         }
-    //     })
-    //     .catch(err => {
-    //         res.status(500).send({
-    //             message: "Error updating color "
-    //         });
-    //     });
 }
 
 const updateProduct = (req, res) => {

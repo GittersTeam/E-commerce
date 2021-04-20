@@ -2,13 +2,13 @@ var express = require('express');
 var router = express.Router();
 
 
-const packageController = require("../../controllers/packages/packageController");
-router.get('/packages', packageController.getAllPackages);
-router.get('/packages/:id', packageController.getPackageByID);
-router.post('/packages', packageController.addPackage);
-router.put('/packages/:id', packageController.updatePackage);
-router.delete('/packages', packageController.deleteAllPackages);
-router.delete('/packages/:id', packageController.deletePackageByID);
+const controller = require("../../controllers");
+router.get('/packages', controller.packages.getAllPackages);
+router.get('/packages/:id', controller.packages.getPackageByID);
+router.post('/packages', controller.packages.addPackage);
+router.put('/packages/:id', controller.packages.updatePackage);
+router.delete('/packages', controller.packages.deleteAllPackages);
+router.delete('/packages/:id', controller.packages.deletePackageByID);
 
 
 
