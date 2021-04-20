@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+<<<<<<< HEAD
 
 
 
@@ -14,6 +15,11 @@ var app = express();
 // connect to database
 const db = require("./models");
 db.sequelize.sync({alter: true})
+=======
+var usersRouter = require('./routes/users');
+
+var app = express();
+>>>>>>> 38da3185af61e41489924d9606d1199b869264e0
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +32,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+<<<<<<< HEAD
+=======
+app.use('/users', usersRouter);
+>>>>>>> 38da3185af61e41489924d9606d1199b869264e0
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

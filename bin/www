@@ -5,7 +5,11 @@
  */
 
 var app = require('../app');
+<<<<<<< HEAD
 var debug = require('debug')('lab3-q2:server');
+=======
+var debug = require('debug')('back-end:server');
+>>>>>>> 38da3185af61e41489924d9606d1199b869264e0
 var http = require('http');
 
 /**
