@@ -9,10 +9,10 @@ var registerRouter = require("./registrations/register")
 var addressRouter = require('./addresses/address');
 var loginRouter = require('./logins/login');
 
-app.use('/users', usersRouter);
-app.use('/customers', customerRouter);
-app.use('/register', registerRouter);
-app.use('/addresses', addressRouter);
-app.use('/login',loginRouter)
+router.use('/users', usersRouter);
+router.use('/customers', customerRouter);
+router.use('/registers', registerRouter);
+router.use('/addresses', addressRouter);
+router.use('/logins',loginRouter)
 
 module.exports = router;

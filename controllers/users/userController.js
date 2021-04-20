@@ -118,7 +118,7 @@ const updateUser = (req, res) =>{
           });
         } else {
           res.send({
-            message: `Cannot user address with id=${id}. Maybe user was not found!`
+            message: `Cannot user User with id=${id}. Maybe user was not found!`
           });
         }
       })
