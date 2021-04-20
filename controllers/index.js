@@ -8,5 +8,3 @@ const registrations = require('./registrations/registerController')
 module.exports = {
   users,addresses,admins,customers,logins,registrations
 }
-
-module.exports = router;

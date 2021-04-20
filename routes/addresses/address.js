@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const addressController = require('../../Controllers/addresses/addressController')
+const controller = require('../../controllers')
 
-router.get('/addresses/:id',addressController.getAddressForOneCustomerByID)
-router.get('/addresses',addressController.getAddress)
-router.post('/addresses',addressController.addAddress)
-router.put('/addresses/:id',addressController.updateAddress)
-router.delete('/addresses/:id',addressController.deleteAddressByID)
-router.delete('/addresses',addressController.deleteAllAddress)
+router.get('/:id',controller.addresses.getAddressForOneCustomerByID)
+router.get('/',controller.addresses.getAddress)
+router.post('/',controller.addresses.addAddress)
+router.put('/:id',controller.addresses.updateAddress)
+router.delete('/:id',controller.addresses.deleteAddressByID)
+router.delete('/',controller.addresses.deleteAllAddress)
 module.exports = router;

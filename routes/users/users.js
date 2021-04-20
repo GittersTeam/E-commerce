@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const userController = require('../../Controllers/users/userController')
+const controller = require('../../controllers')
 
-router.get('/users/:id',userController.getUserByID)
-router.get('/users',userController.getAllUser)
-router.put('/users/changePassword/:id',userController.updateUserPassword)
-router.put('/users/:id',userController.updateUser)
-router.delete('/users/:id',userController.deleteUserByID)
+router.get('/:id',controller.users.getUserByID)
+router.get('/',controller.users.getAllUser)
+router.put('/changePassword/:id',controller.users.updateUserPassword)
+router.put('/:id',controller.users.updateUser)
+router.delete('/:id',controller.users.deleteUserByID)
 module.exports = router;
