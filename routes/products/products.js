@@ -9,7 +9,8 @@ router.post('/products', controller.products.addProduct);
 router.put('/products/:id', controller.products.updateProduct);
 router.delete('/products/', controller.products.deleteAllProducts);
 router.delete('/products/:id', controller.products.deleteProductByID);
-// router.put('/colors/:id', controller.deleteColor);
+// router.put('/deleteColor/:id', controller.products.deleteColor);
+// router.put('/addColor/:id', controller.products.addColor);
 
 
 

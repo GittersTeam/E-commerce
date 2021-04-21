@@ -29,9 +29,16 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 'NIS',
             allowNull: false,
         },
-
+        size: {
+            type: DataTypes.JSON,
+            allowNull: false
+        },
         color: {
             type: DataTypes.JSON,
+            allowNull: false
+        },
+        quantity: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         description: {

@@ -1,66 +1,30 @@
 const db = require("../../models");
 const Package = db.packages;
-var fs = require('fs');
-const multer = require('multer');
-var path = require('path');
-const helpers = require('./helpers');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/images/packages');
-    },
-    // By default, multer removes file extensions so let's add them back
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
 
 const addPackage = (req, res) => {
-    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).array('photo', 6);
-    upload(req, res, function (err) {
+    const package = {
+        name: req.body.name,
+        price: req.body.price,
+        currency: req.body.currency,
+        description: req.body.description,
+        photo: req.body.photo ? req.body.photo : [],
 
-        if (req.fileValidationError) {
-            return res.send(req.fileValidationError);
-        }
-        else if (!req.files) {
-            return res.send('Please select an image to upload');
-        }
-        else if (err instanceof multer.MulterError) {
-            return res.send(err);
-        }
-        else if (err) {
-            return res.send(err);
-        }
-
-        const package = {
-            name: req.body.name,
-            price: req.body.price,
-            currency: req.body.currency,
-            description: req.body.description,
-            photo: req.files ? req.files.map((element, index) => {
-                let temp = {}
-                temp[index] = element.path.replace(/\\/g, "/")
-                return temp
-            }) : {},
-
-
-        };
-        Package.create(package)
-            .then(data => {
-                res.send({
-                    'data': data,
-                    'message': "Package was added successfully",
-                    'status': 200
-                });
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message:
-                        err.message || "Some error occurred while adding the package."
-                });
+    };
+    Package.create(package)
+        .then(data => {
+            res.send({
+                'data': data,
+                'message': "Package was added successfully",
+                'status': 200
             });
-
-    });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while adding the package."
+            });
+        });
 
 }
 const getAllPackages = (req, res) => {
@@ -85,10 +49,11 @@ const getAllPackages = (req, res) => {
 const getPackageByID = (req, res) => {
     Package.findOne({ where: { packageID: req.params.id } })
         .then(data => {
-                res.send({
-                    data: data,
-                    msg: "The package was found successfully "
-                });
+            data.photo = JSON.parse(data.photo)
+            res.send({
+                data: data,
+                msg: "The package was found successfully "
+            });
         })
         .catch(err => {
             res.status(500).send({

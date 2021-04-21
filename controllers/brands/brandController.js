@@ -1,59 +1,27 @@
 const db = require("../../models");
 const Brand = db.brands;
-var fs = require('fs');
-const multer = require('multer');
-var path = require('path');
-const helpers = require('./helpers');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/images/brands');
-    },
-    // By default, multer removes file extensions so let's add them back
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
 
 const addBrand = (req, res) => {
-    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).array('logo', 1);
-    upload(req, res, function (err) {
+    const brand = {
+        name: req.body.name,
+        logo: req.body.logo ? req.body.logo : [],
 
-        if (req.fileValidationError) {
-            return res.send(req.fileValidationError);
-        }
-        else if (!req.files) {
-            return res.send('Please select an image to upload');
-        }
-        else if (err instanceof multer.MulterError) {
-            return res.send(err);
-        }
-        else if (err) {
-            return res.send(err);
-        }
-
-        const brand = {
-            name: req.body.name,
-            logo: req.files ? req.files.map(file => file.path) : []
-
-        };
-        Brand.create(brand)
-            .then(data => {
-                res.send({
-                    'data': data,
-                    'message': "brand was added successfully",
-                    'status': 200
-                });
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message:
-                        err.message || "Some error occurred while adding the brand."
-                });
+    };
+    Brand.create(brand)
+        .then(data => {
+            res.send({
+                'data': data,
+                'message': "brand was added successfully",
+                'status': 200
             });
-
-    });
-
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while adding the brand."
+            });
+        });
 }
 const getAllBrands = (req, res) => {
     Brand.findAll()
@@ -77,6 +45,7 @@ const getAllBrands = (req, res) => {
 const getBrandByID = (req, res) => {
     Brand.findOne({ where: { brandID: req.params.id } })
         .then(data => {
+            data.logo = JSON.parse(data.logo)
             res.send({
                 data: data,
                 msg: "The brand was found successfully "

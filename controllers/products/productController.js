@@ -1,71 +1,36 @@
 const db = require("../../models");
 const Product = db.products;
-var fs = require('fs');
-const multer = require('multer');
-var path = require('path');
-const helpers = require('./helpers');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/images/products');
-    },
-    // By default, multer removes file extensions so let's add them back
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
 
 const addProduct = (req, res) => {
-    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).array('photo', 6);
-    upload(req, res, function (err) {
-
-        if (req.fileValidationError) {
-            return res.send(req.fileValidationError);
-        }
-        // else if (!req.files) {
-        //     return res.send('Please select an image to upload');
-        // }
-        else if (err instanceof multer.MulterError) {
-            return res.send(err);
-        }
-        else if (err) {
-            return res.send(err);
-        }
+    const product = {
+        brandID: req.body.brandID,
+        name: req.body.name,
+        price: req.body.price,
+        cost: req.body.cost,
+        currency: req.body.currency,
+        color: req.body.color,
+        size: req.body.size,
+        quantity: req.body.quantity,
+        description: req.body.description,
+        barCodeNumber: req.body.barCodeNumber,
+        photo: req.body.photo ? req.body.photo : [],
 
 
-        const product = {
-            brandID: req.body.brandID,
-            name: req.body.name,
-            price: req.body.price,
-            cost: req.body.cost,
-            currency: req.body.currency,
-            color: req.body.color,
-            description: req.body.description,
-            barCodeNumber: req.body.barCodeNumber,
-            // photo: req.files ? req.files.map((element, index) => {
-            //     let temp = {}
-            //     temp[index] = element.path.replace(/\\/g, "/")
-            //     return temp
-            // }) : {},
-
-
-        };
-        Product.create(product)
-            .then(data => {
-                res.send({
-                    'data': data,
-                    'message': "product was added successfully",
-                    'status': 200
-                });
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message:
-                        err.message || "Some error occurred while adding the product."
-                });
+    };
+    Product.create(product)
+        .then(data => {
+            res.send({
+                'data': data,
+                'message': "product was added successfully",
+                'status': 200
             });
-
-    });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while adding the product."
+            });
+        });
 
 }
 const getAllProducts = (req, res) => {
@@ -90,6 +55,7 @@ const getAllProducts = (req, res) => {
 const getProductByID = (req, res) => {
     Product.findOne({ where: { productID: req.params.id } })
         .then(data => {
+            data.photo = JSON.parse(data.photo)
             res.send({
                 data: data,
                 msg: "The product was found successfully "
@@ -106,14 +72,18 @@ const getProductByID = (req, res) => {
 
 }
 const deleteColor = async (req, res) => {
-    const colorName = req.body.colour_name;
+    const mycolor = {
+        hex_value: req.body.hex_value,
+        colour_name: req.body.colour_name
+    }
     const id = req.params.id;
     try {
         const product = await Product.findOne({ where: { productID: id } })
-        // console.log("lalalalalalalal", product.color);
+        console.log('Array of colors: ', product.color)
+
         for (let i = 0; i < product.color.length; i++) {
-            if (product.color[i]["colour_name"] == colorName) {
-                product["color"].splice(i, 1);
+            if (product.color[i] == mycolor) {
+                product.color.splice(i, 1);
             }
         }
         Product.update(product.color, {
@@ -123,11 +93,33 @@ const deleteColor = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        return res.status.json({ error: `Some error occurred while retrieving Department for room with uuid ` })
+        return res.status.json({ error: `Some error occurred while retrieving color ` })
     }
 
 
 }
+const addColor = async (req, res, next) => {
+    const mycolor = {
+        hex_value: req.body.hex_value,
+        colour_name: req.body.colour_name
+    }
+    const id = req.params.id;
+    try {
+        const product = await Product.findOne({ where: { productID: id } })
+        console.log('Array of colors: ', product)
+        product.color.push(mycolor);
+
+        Product.update(product.color, {
+            where: { productID: id }
+        })
+    }
+    catch (err) {
+        console.log(err);
+        return res.status.json({ error: `Some error occurred while retrieving color ` })
+    }
+
+}
+
 
 const updateProduct = (req, res) => {
     const productID = req.params.id;
@@ -195,4 +187,4 @@ const deleteAllProducts = function (req, res) {
 }
 
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts, deleteColor };
+module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts, deleteColor, addColor };
