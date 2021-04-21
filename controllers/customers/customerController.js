@@ -61,29 +61,28 @@ const getAllCustomer = (req,res) =>{
       });
   }
 
-  const deleteCustomerByID = (req, res) =>{
+  //const deleteCustomerByID = (req, res) =>{
 
-    const id = req.params.id;
-    Customer.destroy({
-      where: { customerID: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "customer was deleted successfully."
-          });
-        } else {
-          res.send({
-            message: `Cannot customer address with id=${id}. Maybe customer was not found!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error customer address with id=" + id
-        });
-      });
-  }
+    // Customer.destroy({
+    //   where: { userID: id }
+    // })
+    //   .then(num => {
+    //     if (num == 1) {
+    //       res.send({
+    //         message: "customer was deleted successfully."
+    //       });
+    //     } else {
+    //       res.send({
+    //         message: `Cannot customer with id=${id}. Maybe customer was not found!`
+    //       });
+    //     }
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send({
+    //       message: "Error customer address with id=" + id
+    //     });
+    //   });
+ // }
   module.exports = {
-    updateCustomer,getAllCustomer,deleteCustomerByID,getCustomerByID
+    updateCustomer,getAllCustomer,getCustomerByID
    }

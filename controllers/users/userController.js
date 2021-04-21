@@ -1,7 +1,7 @@
 var express = require('express');
 const db = require("../../models");
 const User = db.users;
-const Op = db.Sequelize.Op;
+const Customer = db.customers;
 const {
   hashSync,
   genSaltSync
@@ -106,8 +106,29 @@ const updateUser = (req, res) =>{
       });
   }
   const deleteUserByID = (req, res) =>{
-
+    
     const id = req.params.id;
+    Customer.destroy({
+      where: { userID: id }
+    })
+      .then(num => {
+        console.log(num)
+        if (num == 1 ) {
+          // res.send({
+          //   message: "customer was deleted successfully."
+         // });
+        } else {
+          // res.send({
+          //   message: `Cannot customer with id=${id}. Maybe customer was not found!`
+          // });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error customer address with id=" + id
+        });
+      });
+
     User.destroy({
       where: { userID: id }
     })
