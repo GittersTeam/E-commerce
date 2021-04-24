@@ -1,11 +1,12 @@
 var createError = require('http-errors');
 var express = require('express');
+const db = require("./models");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var app = express();
-
+db.sequelize.sync();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -16,8 +17,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
-const db = require("./models");
-db.sequelize.sync();
+
 // db.sequelize.sync({ alter: true });
 // db.sequelize.sync({ force: true });
 

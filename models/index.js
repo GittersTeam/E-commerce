@@ -18,6 +18,15 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+db.departments = require("./departments/department.js")(sequelize, Sequelize); //add this line
+db.categories = require("./categories/category.js")(sequelize, Sequelize); //add this line
+db.subcategories = require("./departments/subcategory.js")(sequelize, Sequelize); //add this line
+
+db.departments.hasMany(db.categories, {foreignKey:'departmentId', as:'categories'})
+db.categories.belongsTo(db.departments, {foreignKey:'departmentId', as:'department'})
+
+db.categories.hasMany(db.subcategories , {foreignKey:'categoryId', as:'subcategories'})
+db.subcategories.belongsTo(db.categories, { foreignKey: 'categoryId', as: 'category' })
 
 //Importing Schemas
 db.advertisements = require("./advertisements/advertisement")(sequelize, Sequelize);
