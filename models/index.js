@@ -28,4 +28,18 @@ db.categories.belongsTo(db.departments, {foreignKey:'departmentId', as:'departme
 db.categories.hasMany(db.subcategories , {foreignKey:'categoryId', as:'subcategories'})
 db.subcategories.belongsTo(db.categories, { foreignKey: 'categoryId', as: 'category' })
 
+//Importing Schemas
+db.advertisements = require("./advertisements/advertisement")(sequelize, Sequelize);
+db.sales = require("./sales/sale")(sequelize, Sequelize);
+db.flashDeals = require("./flashDeals/flashDeal")(sequelize, Sequelize);
+db.dealProducts = require("./flashDeals/dealProduct")(sequelize, Sequelize);
+db.reviews = require("./reviews/review")(sequelize, Sequelize);
+
+
+//Relationships
+// db.packages.hasMany(db.fixedPriceSales, { foreignKey: "saleID", as: "saleID" });
+// db.packages.hasMany(db.percentageSales, { foreignKey: "saleID", as: "saleID" });
+// db.percentageSales.belongsTo(db.packages, { foreignKey: "roomID" })
+// db.fixedPriceSales.belongsTo(db.packages, { foreignKey: "roomID" })
+
 module.exports = db;
