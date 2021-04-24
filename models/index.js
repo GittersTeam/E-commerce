@@ -22,7 +22,6 @@ db.sequelize = sequelize;
 //add this line
 db.users = require("./users/user")(sequelize, Sequelize);
 db.addresses = require("./addresses/address")(sequelize, Sequelize);
-//db.admins = require("./admins/admin")(sequelize, Sequelize);
 db.customers = require("./customers/customer")(sequelize, Sequelize);
 
 db.addresses.belongsTo(db.customers, { foreignKey: 'customerID' });

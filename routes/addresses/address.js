@@ -7,5 +7,5 @@ router.get('/',controller.addresses.getAddress)
 router.post('/',controller.addresses.addAddress)
 router.put('/:id',controller.addresses.updateAddress)
 router.delete('/:id',controller.addresses.deleteAddressByID)
-router.delete('/',controller.addresses.deleteAllAddress)
+router.delete('/all/:id',controller.addresses.deleteAllAddress)
 module.exports = router;

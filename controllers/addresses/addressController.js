@@ -1,7 +1,5 @@
-var express = require('express');
 const db = require("../../models");
 const Address = db.addresses;
-const Op = db.Sequelize.Op;
 const getAddress = (req, res) => {
 
     Address.findAll() // convert to sql query
@@ -21,7 +19,8 @@ const getAddress = (req, res) => {
 const getAddressForOneCustomerByID = (req, res) => {
 
     Address.findAll({
-        customerID:req.params.id})
+            customerID: req.params.id
+        })
         .then(data => {
             res.send({
                 data: data,
@@ -107,9 +106,11 @@ const deleteAddressByID = (req, res) => {
 }
 
 const deleteAllAddress = (req, res) => {
-
+    const customerID = req.params.id
     Address.destroy({
-            where: {},
+            where: {
+                customerID: customerID
+            },
             truncate: false
         })
         .then(num => {

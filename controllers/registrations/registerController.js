@@ -47,21 +47,24 @@ const addUser = async (req, res) => {
     lastName: req.body.lastName,
     email: req.body.email,
     password: password,
-    userType:"Customer"
+    userType: "Customer"
   };
   User.create(user)
     .then(data => {
       const customer = {
         phoneNumber: req.body.phoneNumber,
         birthDay: req.body.birthDay,
-        userID: data.userID 
+        userID: data.userID
       };
       console.log(customer)
-      Customer.create(customer).then(dataC =>{
-        res.send({userData:data,customerData:dataC})
+      Customer.create(customer).then(dataC => {
+        res.send({
+          userData: data,
+          customerData: dataC
+        })
       }).catch(err => {
         res.status(500).send({
-          message:  "Some error occurred while creating the customer."
+          message: "Some error occurred while creating the customer."
         });
       });
     })
@@ -113,7 +116,7 @@ const addAdmin = async (req, res) => {
     lastName: req.body.lastName,
     email: req.body.email,
     password: password,
-    userType:"Admin"
+    userType: "Admin"
   };
   User.create(admin)
     .then(data => {
