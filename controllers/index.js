@@ -1,6 +1,8 @@
-const carts= require('./carts/cartController.js')
+const products = require('./products/productController')
+const brands = require('./brands/brandController')
+const packages = require('./packages/packageController')
+const carts = require('./carts/cartController.js')
 const orders = require('./orders/orderController.js')
-
 const departments = require('./departments/departmentController')
 const categories = require('./categories/categoryController.js')
 const subcategories = require('./subcategories/subcategoryController.js')
@@ -21,5 +23,10 @@ module.exports = {
     flashDeals,
     dealProducts,
     uploads,
-    orders,carts
+    orders, 
+    carts,
+    products,
+    brands,
+    packages
+
 }
