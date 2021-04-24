@@ -25,3 +25,18 @@ db.order = require("./orders/order.js")(sequelize, Sequelize); //add this line
 
 module.exports = db;
 
+//Importing Schemas
+db.advertisements = require("./advertisements/advertisement")(sequelize, Sequelize);
+db.sales = require("./sales/sale")(sequelize, Sequelize);
+db.flashDeals = require("./flashDeals/flashDeal")(sequelize, Sequelize);
+db.dealProducts = require("./flashDeals/dealProduct")(sequelize, Sequelize);
+db.reviews = require("./reviews/review")(sequelize, Sequelize);
+
+
+//Relationships
+// db.packages.hasMany(db.fixedPriceSales, { foreignKey: "saleID", as: "saleID" });
+// db.packages.hasMany(db.percentageSales, { foreignKey: "saleID", as: "saleID" });
+// db.percentageSales.belongsTo(db.packages, { foreignKey: "roomID" })
+// db.fixedPriceSales.belongsTo(db.packages, { foreignKey: "roomID" })
+
+module.exports = db;
