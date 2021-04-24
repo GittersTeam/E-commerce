@@ -1,3 +1,8 @@
+const users = require('./users/userController')
+const customers = require('./customers/customerController')
+const logins = require('./logins/loginController')
+const addresses = require('./addresses/addressController')
+const registrations = require('./registrations/registerController')
 const products = require('./products/productController')
 const brands = require('./brands/brandController')
 const packages = require('./packages/packageController')
@@ -14,19 +19,24 @@ const flashDeals = require('./flashDeals/flashDealsController')
 const dealProducts = require('./flashDeals/dealProductsController')
 
 module.exports = {
-    departments,
-    categories,
-    subcategories,
-    advertisements,
-    sales,
-    reviews,
-    flashDeals,
-    dealProducts,
-    uploads,
-    orders, 
-    carts,
-    products,
-    brands,
-    packages
+  departments,
+  categories,
+  subcategories,
+  advertisements,
+  sales,
+  reviews,
+  flashDeals,
+  dealProducts,
+  uploads,
+  orders,
+  carts,
+  products,
+  brands,
+  packages,
+  users,
+  addresses,
+  customers,
+  logins,
+  registrations
 
 }

@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+const usersRouter = require('./users/users');
+const customerRouter = require('./customers/customer')
+const loginRouter = require("./logins/login")
+const registerRouter = require("./registrations/register")
+const addressRouter = require('./addresses/address');
 const cartRouter = require('./carts/carts');
 const orderRouter = require('./orders/orders');
 const productsRouter = require('./products/products');
@@ -16,6 +21,11 @@ const departmentsRouter = require('./departments/departments');
 const categoriesRouter = require('./categories/categories');
 const subcategoriesRouter = require('./subcategories/subcategories');
 
+router.use('/customers', customerRouter);
+router.use('/registers', registerRouter);
+router.use('/addresses', addressRouter);
+router.use('/logins',loginRouter)
+router.use('/users', usersRouter);
 router.use('/departments', departmentsRouter);
 router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter);

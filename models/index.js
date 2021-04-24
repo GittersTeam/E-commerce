@@ -19,7 +19,19 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+//Importing Schemas
+db.cart = require("./carts/cart.js")(sequelize, Sequelize); //add this line
+db.order = require("./orders/order.js")(sequelize, Sequelize); //add this line
+db.advertisements = require("./advertisements/advertisement")(sequelize, Sequelize);
+db.sales = require("./sales/sale")(sequelize, Sequelize);
+db.flashDeals = require("./flashDeals/flashDeal")(sequelize, Sequelize);
+db.dealProducts = require("./flashDeals/dealProduct")(sequelize, Sequelize);
+db.reviews = require("./reviews/review")(sequelize, Sequelize);
+db.users = require("./users/user")(sequelize, Sequelize);
+db.addresses = require("./addresses/address")(sequelize, Sequelize);
+db.customers = require("./customers/customer")(sequelize, Sequelize);
 
+//RelationShip Schema
 db.products = require("./products/product.js")(sequelize, Sequelize);
 db.brands = require("./brands/brand.js")(sequelize, Sequelize);
 db.packages = require("./packages/package.js")(sequelize, Sequelize);
@@ -34,21 +46,12 @@ db.departments.hasMany(db.categories, {foreignKey:'departmentId', as:'categories
 db.categories.belongsTo(db.departments, {foreignKey:'departmentId', as:'department'})
 db.categories.hasMany(db.subcategories , {foreignKey:'categoryId', as:'subcategories'})
 db.subcategories.belongsTo(db.categories, { foreignKey: 'categoryId', as: 'category' })
-db.cart = require("./carts/cart.js")(sequelize, Sequelize); //add this line
-//db.cart.hasMany({ProductID});
-db.order = require("./orders/order.js")(sequelize, Sequelize); //add this line
+db.addresses.belongsTo(db.customers, { foreignKey: 'customerID' });
+db.customers.hasMany(db.addresses, { foreignKey: 'customerID' });
+db.customers.belongsTo(db.users, { foreignKey: 'userID' });
+db.users.hasOne(db.customers, { foreignKey: 'userID' });
 
-//Importing Schemas
-db.advertisements = require("./advertisements/advertisement")(sequelize, Sequelize);
-db.sales = require("./sales/sale")(sequelize, Sequelize);
-db.flashDeals = require("./flashDeals/flashDeal")(sequelize, Sequelize);
-db.dealProducts = require("./flashDeals/dealProduct")(sequelize, Sequelize);
-db.reviews = require("./reviews/review")(sequelize, Sequelize);
 
-//Relationships
-// db.packages.hasMany(db.fixedPriceSales, { foreignKey: "saleID", as: "saleID" });
-// db.packages.hasMany(db.percentageSales, { foreignKey: "saleID", as: "saleID" });
-// db.percentageSales.belongsTo(db.packages, { foreignKey: "roomID" })
-// db.fixedPriceSales.belongsTo(db.packages, { foreignKey: "roomID" })
+
 
 module.exports = db;
