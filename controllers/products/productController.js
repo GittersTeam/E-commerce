@@ -71,54 +71,54 @@ const getProductByID = (req, res) => {
         });
 
 }
-const deleteColor = async (req, res) => {
-    const mycolor = {
-        hex_value: req.body.hex_value,
-        colour_name: req.body.colour_name
-    }
-    const id = req.params.id;
-    try {
-        const product = await Product.findOne({ where: { productID: id } })
-        console.log('Array of colors: ', product.color)
+// const deleteColor = async (req, res) => {
+//     const mycolor = {
+//         hex_value: req.body.hex_value,
+//         colour_name: req.body.colour_name
+//     }
+//     const id = req.params.id;
+//     try {
+//         const product = await Product.findOne({ where: { productID: id } })
+//         console.log('Array of colors: ', product.color)
 
-        for (let i = 0; i < product.color.length; i++) {
-            if (product.color[i] == mycolor) {
-                product.color.splice(i, 1);
-            }
-        }
-        Product.update(product.color, {
-            where: { productID: id }
-        })
-        // return res.json(product)
-    }
-    catch (err) {
-        console.log(err);
-        return res.status.json({ error: `Some error occurred while retrieving color ` })
-    }
+//         for (let i = 0; i < product.color.length; i++) {
+//             if (product.color[i] == mycolor) {
+//                 product.color.splice(i, 1);
+//             }
+//         }
+//         Product.update(product.color, {
+//             where: { productID: id }
+//         })
+//         // return res.json(product)
+//     }
+//     catch (err) {
+//         console.log(err);
+//         return res.status.json({ error: `Some error occurred while retrieving color ` })
+//     }
 
 
-}
-const addColor = async (req, res, next) => {
-    const mycolor = {
-        hex_value: req.body.hex_value,
-        colour_name: req.body.colour_name
-    }
-    const id = req.params.id;
-    try {
-        const product = await Product.findOne({ where: { productID: id } })
-        console.log('Array of colors: ', product)
-        product.color.push(mycolor);
+// }
+// const addColor = async (req, res, next) => {
+//     const mycolor = {
+//         hex_value: req.body.hex_value,
+//         colour_name: req.body.colour_name
+//     }
+//     const id = req.params.id;
+//     try {
+//         const product = await Product.findOne({ where: { productID: id } })
+//         console.log('Array of colors: ', product)
+//         product.color.push(mycolor);
 
-        Product.update(product.color, {
-            where: { productID: id }
-        })
-    }
-    catch (err) {
-        console.log(err);
-        return res.status.json({ error: `Some error occurred while retrieving color ` })
-    }
+//         Product.update(product.color, {
+//             where: { productID: id }
+//         })
+//     }
+//     catch (err) {
+//         console.log(err);
+//         return res.status.json({ error: `Some error occurred while retrieving color ` })
+//     }
 
-}
+// }
 
 
 const updateProduct = (req, res) => {
@@ -187,4 +187,4 @@ const deleteAllProducts = function (req, res) {
 }
 
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts, deleteColor, addColor };
+module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts };

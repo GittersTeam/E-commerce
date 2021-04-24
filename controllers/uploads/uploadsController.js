@@ -4,29 +4,29 @@ const multer = require('multer');
 var path = require('path');
 const helpers = require('./helpers');
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function(req, file, cb) {
         cb(null, 'public/images/ads');
     },
     // By default, multer removes file extensions so let's add them back
-    filename: function (req, file, cb) {
+    filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
-const adUpload = function (request, response, next) {
+const adUpload = function(request, response, next) {
     let uploader = multer({
-        storage: multer.diskStorage({
-            destination: function (req, file, cb) {
-                cb(null, `public/images/${request.params.path}`);
-            },
-            // By default, multer removes file extensions so let's add them back
-            filename: function (req, file, cb) {
-                cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-            }
-        }),
-        fileFilter: helpers.imageFilter
-    })
+            storage: multer.diskStorage({
+                destination: function(req, file, cb) {
+                    cb(null, `public/images/${request.params.path}`);
+                },
+                // By default, multer removes file extensions so let's add them back
+                filename: function(req, file, cb) {
+                    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+                }
+            }),
+            fileFilter: helpers.imageFilter
+        })
         .array('pic', 10);
-    uploader(request, response, function (err) {
+    uploader(request, response, function(err) {
         if (request.fileValidationError) {
             return response.send(request.fileValidationError);
         } else if (!request.files) {
