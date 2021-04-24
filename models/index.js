@@ -2,16 +2,16 @@ require('dotenv').config();
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: "mysql",
-    operatorsAliases: false,
+  host: process.env.DB_HOST,
+  dialect: "mysql",
+  operatorsAliases: false,
 
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
 });
 
 const db = {};
@@ -27,6 +27,12 @@ db.categories.belongsTo(db.departments, {foreignKey:'departmentId', as:'departme
 
 db.categories.hasMany(db.subcategories , {foreignKey:'categoryId', as:'subcategories'})
 db.subcategories.belongsTo(db.categories, { foreignKey: 'categoryId', as: 'category' })
+
+db.cart = require("./carts/cart.js")(sequelize, Sequelize); //add this line
+//db.cart.hasMany({ProductID});
+db.order = require("./orders/order.js")(sequelize, Sequelize); //add this line
+
+module.exports = db;
 
 //Importing Schemas
 db.advertisements = require("./advertisements/advertisement")(sequelize, Sequelize);

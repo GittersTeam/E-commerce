@@ -1,5 +1,10 @@
 var express = require('express');
+var unirest = require("unirest");
 var router = express.Router();
+var cartRouter = require('./carts/carts');
+var orderRouter = require('./orders/orders');
+
+
 const salesRouter = require('./sales/sales')
 const advertisementsRouter = require('./advertisements/advertisements')
 const reviewsRouter = require('./reviews/reviews')
@@ -20,5 +25,7 @@ router.use('/flash-deals', flashDealsRouter);
 router.use('/uploads', uploadsRouter);
 router.use('/advertisements', advertisementsRouter);
 router.use('/reviews', reviewsRouter);
+router.use('/carts', cartRouter);
+router.use('/orders', orderRouter);
 
 module.exports = router;

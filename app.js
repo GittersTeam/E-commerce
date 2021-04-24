@@ -5,6 +5,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./routes/index');
+
+
+
+var loadenv = require('dotenv').config();
+
 var app = express();
 db.sequelize.sync();
 // view engine setup
