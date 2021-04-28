@@ -30,18 +30,18 @@ db.reviews = require("./reviews/review")(sequelize, Sequelize);
 db.users = require("./users/user")(sequelize, Sequelize);
 db.addresses = require("./addresses/address")(sequelize, Sequelize);
 db.customers = require("./customers/customer")(sequelize, Sequelize);
-
-//RelationShip Schema
 db.products = require("./products/product.js")(sequelize, Sequelize);
 db.brands = require("./brands/brand.js")(sequelize, Sequelize);
 db.packages = require("./packages/package.js")(sequelize, Sequelize);
+db.departments = require("./departments/department.js")(sequelize, Sequelize); 
+db.categories = require("./categories/category.js")(sequelize, Sequelize); 
+db.subcategories = require("./subcategories/subcategory.js")(sequelize, Sequelize); 
+//RelationShip Schema
+
 db.products.belongsTo(db.brands, { foreignKey: 'brandID' });
 db.brands.hasMany(db.products, { foreignKey: 'brandID' });
 db.products.belongsToMany(db.packages, { through: 'packageProducts', foreignKey: 'productID' });
 db.packages.belongsToMany(db.products, { through: 'packageProducts', foreignKey: 'packageID' });
-db.departments = require("./departments/department.js")(sequelize, Sequelize); //add this line
-db.categories = require("./categories/category.js")(sequelize, Sequelize); //add this line
-db.subcategories = require("./departments/subcategory.js")(sequelize, Sequelize); //add this line
 db.departments.hasMany(db.categories, {foreignKey:'departmentId', as:'categories'})
 db.categories.belongsTo(db.departments, {foreignKey:'departmentId', as:'department'})
 db.categories.hasMany(db.subcategories , {foreignKey:'categoryId', as:'subcategories'})
@@ -51,7 +51,7 @@ db.customers.hasMany(db.addresses, { foreignKey: 'customerID' });
 db.customers.belongsTo(db.users, { foreignKey: 'userID' });
 db.users.hasOne(db.customers, { foreignKey: 'userID' });
 
-
-
+db.subcategories.hasMany(db.products, {foreignKey:'subcategoryId', as:'products'})
+db.products.belongsTo(db.subcategories, {foreignKey:'subcategoryId', as:'subcategory'})
 
 module.exports = db;
