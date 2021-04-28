@@ -41,7 +41,7 @@ const getDepartmentByuuid =  async(req, res) =>{
 };
 const createDepartment = async (req, res) => {
     // Validate request
-    const { name, descrption } = req.body;
+    const { name, icon, descrption } = req.body;
     if (!name || !descrption) {
         res.status(400).send({
             message: "Department name and descrption can not be empty!",
@@ -50,11 +50,10 @@ const createDepartment = async (req, res) => {
     }
     // Create a Tutorial
     try {
-        const department = await Department.create({ name, descrption });
+        const department = await Department.create({ name, icon, descrption });
         return res.json(department);
     } catch (err) {
-        console.log(err);
-        return res.status.json(err);
+      res.json(err);
     }
 };
 

@@ -6,11 +6,11 @@ const Subcategories = db.subcategories;
 const createCategory = async (req, res) => { 
     // Create a Tutorial
     try {
-       const { name, icon, departmentUuid } = req.body;
+       const { name, departmentUuid } = req.body;
         const dep = await Department.findOne({
             where: { uuid: departmentUuid }
         })
-        const category = await Category.create({ name, icon, departmentId: dep.uuid });
+        const category = await Category.create({ name, departmentId: dep.uuid });
         return res.json(category);
       
    

@@ -10,9 +10,6 @@ module.exports = (sequelize, Sequelize) => {
             type:Sequelize.STRING,
             allowNull:false
           },
-          icon:{
-            type:Sequelize.JSON,
-          },
           departmentId: {
             type: Sequelize.UUID,
             allowNull: false

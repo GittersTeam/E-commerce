@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
              
             }
           },
+          icon:{
+            type:Sequelize.STRING,
+          },
           descrption: {
             type:Sequelize.STRING,
             allowNull:false,

@@ -15,11 +15,6 @@ module.exports = (sequelize, Sequelize) => {
       
             },
           },
-          icon: {
-            type: Sequelize.STRING,
-            allowNull: false
-          },
-      
           categoryId: {
             type: Sequelize.UUID,
             allowNull: false

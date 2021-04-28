@@ -1,5 +1,5 @@
 const db = require("../../models");
-const  Department = db.departments;
+const  Product = db.products;
 const  Category = db.categories;
 const  Subcategory = db.subcategories;
 const createSubcategories = async (req, res) => {
@@ -20,7 +20,7 @@ const createSubcategories = async (req, res) => {
 const getAllsubcategories = async (req, res) => { 
     // Create a Tutorial
     try {
-        const subcategories = await Subcategory.findAll({include: [{model:Category, as:'category'}]})
+        const subcategories = await Subcategory.findAll({include: [{model:Category, as:'category'}, {model:Product, as:'products'}]})
         return res.json(subcategories);
     } catch (err) {
         console.log(err);
