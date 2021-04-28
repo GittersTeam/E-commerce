@@ -14,7 +14,7 @@ const addProduct = (req, res) => {
         description: req.body.description,
         barCodeNumber: req.body.barCodeNumber,
         photo: req.body.photo ? req.body.photo : [],
-
+        subcategoryId: req.body.subcategoryId,
 
     };
     Product.create(product)
