@@ -36,7 +36,8 @@ const getallProduct=function(req, res){
 
         const cart= {
           products: req.body.products,
-          packages:req.body.packages
+          packages:req.body.packages,
+          customerID:req.body.customerID
 
         };
         Cart.create(cart)
