@@ -68,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'uuid'
             },
 
-        }
+        },
     }, { tableName: "products" });
 
 
