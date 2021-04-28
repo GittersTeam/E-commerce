@@ -9,18 +9,18 @@ module.exports = (sequelize, Sequelize) => {
         customerID: {
             type: Sequelize.UUID,
             allowNull: false,
-            // references: {
-            //     model: "productID",
-            //     key: "productID"
-            // }
+            references: {
+                model: "customers",
+                key: "customerID"
+            }
         },
         productID: {
             type: Sequelize.UUID,
             allowNull: false,
-            // references: {
-            //     model: "productID",
-            //     key: "productID"
-            // }
+            references: {
+                model: "products",
+                key: "productID"
+            }
         },
         review: {
             type: Sequelize.STRING(500),

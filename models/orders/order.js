@@ -23,7 +23,16 @@ module.exports = (sequelize, Sequelize) => {
       packages:{
         type: Sequelize.JSON,
 
-      }
+      },
+      customerID: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false,
+        references: {
+          model: "customers",
+          key: "customerID"
+        }
+      },
     })
   
 

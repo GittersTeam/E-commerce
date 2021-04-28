@@ -12,11 +12,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         productID: {
             type: Sequelize.UUID,
-            allowNull: false
-                // references: {
-                //     model: "productID",
-                //     key: "productID"
-                // }
+            allowNull: false,
+                references: {
+                    model: "products",
+                    key: "productID"
+                }
         },
     }, { timestamps: true });
 

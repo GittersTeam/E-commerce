@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const FlashDeal = sequelize.define("FlashDeal", {
-        id: {
+        flashDealID: {
             type: Sequelize.UUID,
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
