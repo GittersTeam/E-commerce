@@ -67,8 +67,17 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'brands',
                 key: 'brandID'
             }
+        },
+        subcategoryId: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            allowNull: false,
+            references: {
+                model: 'subcategories',
+                key: 'uuid'
+            },
 
-        }
+        },
     }, { tableName: "products" });
 
 
