@@ -32,10 +32,10 @@ db.customers = require("./customers/customer")(sequelize, Sequelize);
 db.products = require("./products/product.js")(sequelize, Sequelize);
 db.brands = require("./brands/brand.js")(sequelize, Sequelize);
 db.packages = require("./packages/package.js")(sequelize, Sequelize);
-db.departments = require("./departments/department.js")(sequelize, Sequelize); //add this line
-db.categories = require("./categories/category.js")(sequelize, Sequelize); //add this line
-db.subcategories = require("./subcategories/subcategory.js")(sequelize, Sequelize); //add this line
-//----------------------------------------------------------------------------
+db.departments = require("./departments/department.js")(sequelize, Sequelize); 
+db.categories = require("./categories/category.js")(sequelize, Sequelize); 
+db.subcategories = require("./subcategories/subcategory.js")(sequelize, Sequelize); 
+//RelationShip Schema
 
 db.products.belongsTo(db.brands, { foreignKey: 'brandID' });
 db.brands.hasMany(db.products, { foreignKey: 'brandID' });

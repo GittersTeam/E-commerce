@@ -1,6 +1,7 @@
 const db = require("../../models");
 const Product = db.products;
-
+const Subcategory = db.subcategories;
+const Category = db.categories;
 const addProduct = (req, res) => {
     const product = {
         brandID: req.body.brandID,
@@ -12,6 +13,7 @@ const addProduct = (req, res) => {
         size: req.body.size,
         quantity: req.body.quantity,
         description: req.body.description,
+        subcategoryId: req.body.subcategoryId,
         barCodeNumber: req.body.barCodeNumber,
         photo: req.body.photo ? req.body.photo : [],
         subcategoryId: req.body.subcategoryId,
@@ -34,7 +36,11 @@ const addProduct = (req, res) => {
 
 }
 const getAllProducts = (req, res) => {
-    Product.findAll()
+    Product.findAll({
+        include: [
+            { model: Subcategory, as: 'subcategory' },
+        ]
+    })
         .then(data => {
             res.send({
                 'data': data,
