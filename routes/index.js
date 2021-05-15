@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const isCustomer = require('../middleware/isCustomer');
+const isAuth = require('../middleware/Auth');
 const usersRouter = require('./users/users');
 const customerRouter = require('./customers/customer')
 const loginRouter = require("./logins/login")
@@ -20,12 +22,13 @@ const dealProductsRouter = require('./flashDeals/dealProducts')
 const departmentsRouter = require('./departments/departments');
 const categoriesRouter = require('./categories/categories');
 const subcategoriesRouter = require('./subcategories/subcategories');
+const authRouter = require ('./auth/auth')
 
-router.use('/customers', customerRouter);
+router.use('/customers',[isCustomer],customerRouter);
 router.use('/registers', registerRouter);
-router.use('/addresses', addressRouter);
+router.use('/addresses',[isCustomer], addressRouter);
 router.use('/logins',loginRouter)
-router.use('/users', usersRouter);
+router.use('/users',[isAuth], usersRouter);
 router.use('/departments', departmentsRouter);
 router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter);
@@ -40,5 +43,6 @@ router.use('/orders', orderRouter);
 router.use('/products', productsRouter);
 router.use('/brands', brandsRouter);
 router.use('/packages', packagesRouter);
+router.use('/auth',authRouter)
 
 module.exports = router;

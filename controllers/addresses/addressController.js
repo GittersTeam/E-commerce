@@ -126,10 +126,10 @@ const deleteAllAddress = (req, res) => {
 }
 
 module.exports = {
-    addAddress,
-    getAddress,
-    getAddressForOneCustomerByID,
-    deleteAllAddress,
-    deleteAddressByID,
-    updateAddress
+    addAddress:addAddress,
+    getAddress:getAddress,
+    getAddressForOneCustomerByID:getAddressForOneCustomerByID,
+    deleteAllAddress:deleteAllAddress,
+    deleteAddressByID:deleteAddressByID,
+    updateAddress:updateAddress
 }
