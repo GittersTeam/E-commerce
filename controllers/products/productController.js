@@ -2,6 +2,8 @@ const db = require("../../models");
 const Product = db.products;
 const Subcategory = db.subcategories;
 const Category = db.categories;
+
+
 const addProduct = (req, res) => {
     const product = {
         brandID: req.body.brandID,
@@ -191,6 +193,31 @@ const deleteAllProducts = function (req, res) {
             });
         });
 }
+const getAllProducts = function (req, res) {  // (req, res)=>{  
+    // const isPublished = req.query.isPublished ? req.query.isPublished : "";
 
+    var condition = {}
+    if (req.user.userType != 'Admin') {
+        condition.isPublished = true
+    }
+    Product.findAll({
+        where: condition
+
+    })
+        .then(data => {
+            res.send({
+                'data': data,
+                'message': "Products retrieved successfully",
+                'status': 200
+            });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving products."
+            });
+        });
+
+}
 
 module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts };
