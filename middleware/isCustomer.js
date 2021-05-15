@@ -16,9 +16,9 @@ const verifyToken = async (req, res, next) => {
  // const verified = jwt.verify(token, process.env.JWT_SECRET);
  //this part to get authorized user data
  var userData = userController.parseJwt(bearerToken);
- const user = await User.findOne({ where:{userID: userData.id} });
+//  const user = await User.findOne({ where:{userID: userData.id} });
+//  req.user = user;
  const customer = await Customer.findOne({ where:{userID: userData.id} });
- req.user = user;
  req.customer = customer
 //  console.log(user)
 //  console.log(customer)
