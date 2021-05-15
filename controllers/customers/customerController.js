@@ -18,7 +18,7 @@ const getAllCustomer = (req, res) => {
 
 const getCustomerByID = (req, res) => {
 
-  Customer.findByPk(req.params.id)
+  Customer.findByPk(req.customer.customerID)
     .then(data => {
       res.send({
         data: data,
@@ -36,7 +36,7 @@ const updateCustomer = (req, res) => {
   const id = req.params.id;
   Customer.update(req.body, {
       where: {
-        customerID: id
+        customerID: req.customer.customerID
       }
     })
     .then(num => {

@@ -17,7 +17,7 @@ const verifyToken = async (req, res, next) => {
  var userdata = userController.parseJwt(bearerToken);
  const user = await User.findOne({ where:{userID: userdata.id} });
  req.user = user;
- if(user.userType == 'admin')
+ if(user.userType == 'Admin')
  next() // continuous;
  else
  res.status(300).json({error: 'You are not authorized as admin'});
