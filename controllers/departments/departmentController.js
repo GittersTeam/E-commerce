@@ -2,11 +2,14 @@ const db = require("../../models");
 const  Department = db.departments;
 const  Category = db.categories;
 const  Subcategories = db.subcategories;
+const  Product = db.products;
+
 const getAllDepartments = function (req, res) {
     Department.findAll({
         where: {},
         include: {model: Category, as: 'categories', include: [
-          {model: Subcategories, as:'subcategories'}
+          {model: Subcategories, as:'subcategories', include: [{model:Product, as:'products'}]},
+          
         ]}
     })
         .then((data) => {
