@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const userController = require("../controllers/users/userController");
 const db = require("../models");
 const User = db.users;
+const Customer = db.customers;
 // middleware to validate token
 const verifyToken = async (req, res, next) => {
  // const token = req.header('auth-token');
@@ -14,10 +15,13 @@ const verifyToken = async (req, res, next) => {
 
  // const verified = jwt.verify(token, process.env.JWT_SECRET);
  //this part to get authorized user data
- var userdata = userController.parseJwt(bearerToken);
- const user = await User.findOne({ where:{userID: userdata.id} });
- req.user = user;
- console.log(user)
+ var userData = userController.parseJwt(bearerToken);
+  const user = await User.findOne({ where:{userID: userData.id} });
+//  req.user = user;
+ const customer = await Customer.findOne({ where:{userID: userData.id} });
+ req.customer = customer
+//  console.log(user)
+//  console.log(customer)
  if(user.userType == 'Customer')
  next() // continuous;
  else
