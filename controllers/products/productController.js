@@ -2,7 +2,7 @@ const db = require("../../models");
 const Product = db.products;
 const Subcategory = db.subcategories;
 const Category = db.categories;
-
+const Brand = db.brands;
 
 const addProduct = (req, res) => {
     const product = {
@@ -19,6 +19,7 @@ const addProduct = (req, res) => {
         barCodeNumber: req.body.barCodeNumber,
         photo: req.body.photo ? req.body.photo : [],
         subcategoryId: req.body.subcategoryId,
+        isPublished: req.body.isPublished
 
     };
     Product.create(product)
@@ -37,29 +38,6 @@ const addProduct = (req, res) => {
         });
 
 }
-// const getAllProducts = (req, res) => {
-//     Product.findAll({
-//         include: [
-//             { model: Subcategory, as: 'subcategory' },
-//         ]
-//     })
-//         .then(data => {
-//             res.send({
-//                 'data': data,
-//                 'message': "list of products",
-//                 'status': 200
-//             });
-
-//         })
-//         .catch(err => {
-//             res.status(500).send({
-//                 message:
-//                     err.message || "Some error occurred while retrieving products."
-//             });
-//         });
-
-
-// }
 const getProductByID = (req, res) => {
     Product.findOne({ where: { productID: req.params.id } })
         .then(data => {
@@ -79,55 +57,6 @@ const getProductByID = (req, res) => {
         });
 
 }
-// const deleteColor = async (req, res) => {
-//     const mycolor = {
-//         hex_value: req.body.hex_value,
-//         colour_name: req.body.colour_name
-//     }
-//     const id = req.params.id;
-//     try {
-//         const product = await Product.findOne({ where: { productID: id } })
-//         console.log('Array of colors: ', product.color)
-
-//         for (let i = 0; i < product.color.length; i++) {
-//             if (product.color[i] == mycolor) {
-//                 product.color.splice(i, 1);
-//             }
-//         }
-//         Product.update(product.color, {
-//             where: { productID: id }
-//         })
-//         // return res.json(product)
-//     }
-//     catch (err) {
-//         console.log(err);
-//         return res.status.json({ error: `Some error occurred while retrieving color ` })
-//     }
-
-
-// }
-// const addColor = async (req, res, next) => {
-//     const mycolor = {
-//         hex_value: req.body.hex_value,
-//         colour_name: req.body.colour_name
-//     }
-//     const id = req.params.id;
-//     try {
-//         const product = await Product.findOne({ where: { productID: id } })
-//         console.log('Array of colors: ', product)
-//         product.color.push(mycolor);
-
-//         Product.update(product.color, {
-//             where: { productID: id }
-//         })
-//     }
-//     catch (err) {
-//         console.log(err);
-//         return res.status.json({ error: `Some error occurred while retrieving color ` })
-//     }
-
-// }
-
 
 const updateProduct = (req, res) => {
     const productID = req.params.id;
@@ -193,16 +122,16 @@ const deleteAllProducts = function (req, res) {
             });
         });
 }
-const getAllProducts = function (req, res) {  // (req, res)=>{  
-    // const isPublished = req.query.isPublished ? req.query.isPublished : "";
-
+const getAllProducts = function (req, res) {  
+    const user = db.users
     var condition = {}
-    if (req.user.userType != 'Admin') {
+    if ((req.user == null) || (req.user != null && req.user.userType != 'Admin')) {
         condition.isPublished = true
     }
+    console.log(req.user.userType)
+
     Product.findAll({
         where: condition
-
     })
         .then(data => {
             res.send({

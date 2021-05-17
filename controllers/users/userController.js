@@ -220,7 +220,7 @@ const signIn = async function (req, res) {
   // create token
   const token = jwt.sign({
   id: user.userID,
-  }, process.env.JWT_SECRET,{expiresIn:'2h'})
+  }, process.env.JWT_SECRET)
   res.json({
   data: 'singin success',
   user: user,

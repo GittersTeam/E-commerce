@@ -4,7 +4,7 @@ const isAuth = require('../../middleware/auth')
 const isAdmin = require('../../middleware/isAdmin')
 
 const controller = require("../../controllers");
-router.get('/', [isAuth], controller.brands.getAllBrands);
+router.get('/', controller.brands.getAllBrands);
 router.get('/:id', [isAdmin], controller.brands.getBrandByID);
 router.post('/', [isAdmin], controller.brands.addBrand);
 router.put('/:id', [isAdmin], controller.brands.updateBrand);

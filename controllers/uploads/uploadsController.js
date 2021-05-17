@@ -5,7 +5,7 @@ var path = require('path');
 const helpers = require('./helpers');
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, 'public/images/ads');
+        cb(null, 'public/images/');
     },
     // By default, multer removes file extensions so let's add them back
     filename: function(req, file, cb) {

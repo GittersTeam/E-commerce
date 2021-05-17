@@ -8,8 +8,7 @@ const addPackage = (req, res) => {
         price: req.body.price,
         currency: req.body.currency,
         description: req.body.description,
-        photo: req.body.photo ? req.body.photo : [],
-
+        // photo: req.body.photo ? req.body.photo : [],
     };
     Package.create(package)
         .then(data => {
@@ -32,7 +31,7 @@ const getAllPackages = (req, res) => {
         .then(data => {
             res.send({
                 'data': data,
-                'message': "list of packages",
+                'message': "List of packages",
                 'status': 200
             });
 
@@ -49,16 +48,25 @@ const getAllPackages = (req, res) => {
 const getPackageByID = (req, res) => {
     Package.findOne({ where: { packageID: req.params.id } })
         .then(data => {
-            data.photo = JSON.parse(data.photo)
-            res.send({
-                data: data,
-                msg: "The package was found successfully "
-            });
+            if (data != null) {
+                data.photo = JSON.parse(data.photo)
+                res.send({
+                    data: data,
+                    msg: "The package was found successfully "
+                });
+            }
+            else {
+                res.send({
+                    data: data,
+                    msg: "The package was not found"
+                });
+            }
         })
+
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving the package."
+                    err.message || "Some error occurred while retrieving the package with id :" + packageID
             });
         });
 
@@ -100,7 +108,7 @@ const deletePackageByID = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: `Cannot delete package, Maybe it was not found!`
+                    message: `Cannot delete package with id=${packageID}. Maybe package was not found !`
                 });
             }
         })
@@ -116,10 +124,17 @@ const deleteAllPackages = function (req, res) {
         where: {},
         truncate: false
     })
+
         .then(num => {
-            res.send({
-                message: `${num} Packages were deleted successfully!`
-            });
+            if (num == 1) {
+                res.send({
+                    message: `${num} packages were deleted successfully!`
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete packages!`
+                });
+            }
 
         })
         .catch(err => {
@@ -130,4 +145,12 @@ const deleteAllPackages = function (req, res) {
 }
 
 
-module.exports = { getAllPackages, addPackage, deleteAllPackages, updatePackage, getPackageByID, deletePackageByID };
+module.exports =
+{
+    getAllPackages,
+    addPackage,
+    deleteAllPackages,
+    updatePackage,
+    getPackageByID,
+    deletePackageByID
+};

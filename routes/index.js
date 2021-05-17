@@ -24,12 +24,12 @@ const dealProductsRouter = require('./flashDeals/dealProducts')
 const departmentsRouter = require('./departments/departments');
 const categoriesRouter = require('./categories/categories');
 const subcategoriesRouter = require('./subcategories/subcategories');
-const authRouter = require ('./auth/auth')
+const authRouter = require('./auth/auth')
 
-router.use('/auth',authRouter)
+router.use('/auth', authRouter)
 router.use('/addresses', addressRouter);
-router.use('/registers',[isAdmin], registerRouter);
-router.use('/customers',customerRouter);
+router.use('/registers', [isAdmin], registerRouter);
+router.use('/customers', customerRouter);
 router.use('/users', usersRouter);
 //router.use('/logins',loginRouter)
 router.use('/departments', departmentsRouter);
@@ -38,7 +38,7 @@ router.use('/subcategories', subcategoriesRouter);
 router.use('/sales', salesRouter);
 router.use('/flash-deals/products', dealProductsRouter);
 router.use('/flash-deals', flashDealsRouter);
-router.use('/uploads', uploadsRouter);
+router.use('/uploads', [isAdmin], uploadsRouter);
 router.use('/advertisements', advertisementsRouter);
 router.use('/reviews', reviewsRouter);
 router.use('/carts', cartRouter);
