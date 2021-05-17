@@ -1,6 +1,6 @@
 const db = require("../../models");
 const Address = db.addresses;
-const getAddress = (req, res) => {
+const getAddress = (req, res) => { //is admin
 
     Address.findAll() // convert to sql query
         .then(data => {
@@ -16,10 +16,11 @@ const getAddress = (req, res) => {
         });
 }
 
-const getAddressForOneCustomerByID = (req, res) => {
+const getAddressForOneCustomerByID = (req, res) => { //is customer
 
     Address.findAll({
-            customerID: req.params.id
+        where:{customerID: req.customer.customerID}
+            
         })
         .then(data => {
             res.send({
@@ -34,13 +35,13 @@ const getAddressForOneCustomerByID = (req, res) => {
         });
 }
 
-const addAddress = (req, res) => {
+const addAddress = (req, res) => { // is customer
 
     const address = {
         addressLine1: req.body.addressLine1,
         addressLine2: req.body.addressLine2,
         city: req.body.city,
-        customerID: req.body.customerID,
+        customerID: req.customer.customerID,
         postalCode: req.body.postalCode,
     };
     Address.create(address)
@@ -55,10 +56,10 @@ const addAddress = (req, res) => {
 }
 const updateAddress = (req, res) => {
 
-    const id = req.params.id;
+    const id = req.body.addressID;
     Address.update(req.body, {
             where: {
-                addressID: id
+                addressID:id
             }
         })
         .then(num => {
