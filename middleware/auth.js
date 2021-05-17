@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const userController = require("../controllers/users/userController");
 const db = require("../models");
 const User = db.users;
+const Customer = db.customers;
 // for all student and admin
 // middleware to validate token (rutas protegidas)
 const verifyToken = async (req, res, next) => {
@@ -19,6 +20,7 @@ const verifyToken = async (req, res, next) => {
  console.log(userData)
  const user = await User.findOne({ where:{userID: userData.id} });
  req.user = user;
+ console.log(userData)
  const customer = await Customer.findOne({ where:{userID: userData.id} });
  req.customer = customer
  next() // continuamos;
