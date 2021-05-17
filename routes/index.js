@@ -28,7 +28,7 @@ const authRouter = require ('./auth/auth')
 
 router.use('/auth',authRouter)
 router.use('/addresses', addressRouter);
-router.use('/registers',[isAdmin], registerRouter);
+router.use('/registers',[isAdmin] ,registerRouter);
 router.use('/customers',customerRouter);
 router.use('/users', usersRouter);
 //router.use('/logins',loginRouter)
