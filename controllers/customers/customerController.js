@@ -1,8 +1,13 @@
 const db = require("../../models");
+const  Addresses = db.addresses;
 const Customer = db.customers;
-
+const Cart = db.carts;
+const User = db.users;
 const getAllCustomer = (req, res) => {
-  Customer.findAll() // convert to sql query 
+  Customer.findAll({
+    where:{},
+    include: [{model: Addresses, as: 'addresses'},{model: Cart, as:'cart'},{model:User, as: 'user'}]
+  }) // convert to sql query 
     .then(data => {
       res.send({
         'data': data,
@@ -18,7 +23,13 @@ const getAllCustomer = (req, res) => {
 
 const getCustomerByID = (req, res) => {
 
-  Customer.findByPk(req.customer.customerID)
+   Customer.findAll(
+
+  {
+    where:{customerID:req.customer.customerID},
+    include: [{model: Addresses, as: 'addresses'},{model: Cart, as:'cart'},{model:User, as: 'user'}]
+})
+
     .then(data => {
       res.send({
         data: data,
@@ -37,6 +48,7 @@ const updateCustomer = (req, res) => {
   Customer.update(req.body, {
       where: {
         customerID: req.customer.customerID
+        
       }
     })
     .then(num => {

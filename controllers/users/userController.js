@@ -1,6 +1,7 @@
 const db = require("../../models");
 const Customer = db.customers;
 const User = db.users;
+const Cart = db.carts;
 const jwt = require('jsonwebtoken'); 
 const bcrypt = require('bcrypt')
 const atob = require('atob');
@@ -192,9 +193,26 @@ const signUp = async (req, res) => {
       };
       console.log(customer)
       Customer.create(customer).then(dataC => {
-        res.send({
+        const cart= {
+          products: req.body.products,
+          packages:req.body.packages,
+          customerID:dataC.customerID
+
+        };
+        Cart.create(cart)
+        .then(dataCart => {
+          res.send({
           userData: data,
-          customerData: dataC
+          customerData: dataC,
+          cartData:dataCart
+
+          });
+        })
+        .catch(err => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the Cart."
+          });
         })
       }).catch(err => {
         res.status(500).send({
