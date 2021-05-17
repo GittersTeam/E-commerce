@@ -17,6 +17,8 @@ const verifyToken = async (req, res, next) => {
  var userdata = userController.parseJwt(bearerToken);
  const user = await User.findOne({ where:{userID: userdata.id} });
  req.user = user;
+ const customer = await Customer.findOne({ where:{userID: userData.id} });
+ req.customer = customer
  console.log(user)
  if(user.userType == 'Customer')
  next() // continuous;

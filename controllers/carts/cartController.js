@@ -2,10 +2,11 @@ var express = require('express');
 const db = require("../../models");
 const Cart = db.cart;
 const Op = db.Sequelize.Op;
-  
-const getallProduct=function(req, res){
 
-  Cart.findAll()
+const getallProduct=function(req, res){
+ 
+  Cart.findOne({where:{ customerID:req.customer.customerID} })
+  
     .then(data => {
       res.send(data);
     })
@@ -17,28 +18,11 @@ const getallProduct=function(req, res){
     });
   }
 
-  const FindProductByID= function(req, res){
  
-
-      Cart.findByPk(req.params.id)
-        .then(data => {
-          res.send(data);
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred ."
-          });
-        });
-       
-    }
-    const CreateCart=function(req, res){
+    const AddProduct=function(req, res){
 
         const cart= {
-          products: req.body.products,
-          packages:req.body.packages,
           customerID:req.body.customerID
-
         };
         Cart.create(cart)
         .then(data => {
@@ -52,12 +36,9 @@ const getallProduct=function(req, res){
         });}
        
        const updateCart=function(req, res){
-
-        
-      const id = req.params.id;
- 
+    
     Cart.update(req.body, {
-        where: { id: id }
+        where: { customerID:req.customer.customerID }
       })
         .then(num => {
           if (num == 1) {
@@ -77,30 +58,7 @@ const getallProduct=function(req, res){
           });
         });
            
-   }
-       const deleteProduct = function(req, res){
-      
-          const id = req.params.id;
-        
-          Cart.destroy({
-            where: { id : id }
-          })
-            .then(num => {
-              if (num == 1) {
-                res.send({
-                  message: "Product was deleted successfully."
-                });
-              } else {
-                res.send({
-                  message: 'Cannot delete Product with id=${id}.'
-                });
-              }
-            })
-            .catch(err => {
-              res.status(500).send({
-                message: "Error deleting a Product with id=" + id
-              });
-            });
+  
            
         }
-         module.exports = {CreateCart,getallProduct,deleteProduct,updateCart,FindProductByID}
+         module.exports = {getallProduct,updateCart,AddProduct}
