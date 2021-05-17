@@ -1,8 +1,9 @@
 var express = require('express');
-const { orders } = require('../../models');
+const { orders, customers } = require('../../models');
 const db = require("../../models");
 const Order = db.order;
 const Cart = db.cart;
+const Customer=db.customers;
 
 const Op = db.Sequelize.Op;
 const CreateOrder=function(req, res){
@@ -32,7 +33,7 @@ const CreateOrder=function(req, res){
   
 const getOrders=function(req, res){
 
-  Order.findAll({ include:{model:orders,as:'orders'}})
+  Order.findAll({ include:{model:Customer,as:'customers'}})
   
     .then(data => {
       res.send(data);
@@ -49,7 +50,7 @@ const getOrders=function(req, res){
  
 
       Order.findByPk( { where: {customerID:req.customer.customerID} ,
-          include:{model:orders,as:'orders'}})
+          include:{model:customers,as:'customers'}})
       
         .then(data => {
           res.send(data);

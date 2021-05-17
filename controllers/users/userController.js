@@ -29,7 +29,7 @@ const getAllUser = (req, res) => {
 
 const getUserByID = (req, res) => {
 
-  User.findByPk(req.params.id)
+  User.findByPk(req.user.userID)
     .then(data => {
       res.send({
         data: data,
@@ -46,7 +46,7 @@ const getUserByID = (req, res) => {
 
 const updateUser = (req, res) => {
 
-  const id = req.params.id;
+  const id = req.user.userID;
   User.update(req.body, {
       where: {
         userID: id
@@ -90,7 +90,7 @@ const updateUserPassword = (req, res) => {
   var salt = genSaltSync(10)
   password = hashSync(req.body.password, salt)
 
-  const id = req.params.id;
+  const id = req.user.userID;
   User.update({
       password: password
     }, {
@@ -116,7 +116,7 @@ const updateUserPassword = (req, res) => {
     });
 }
 const deleteUserByID = (req, res) => {
-  const id = req.params.id;
+  const id = req.user.userID;
   User.destroy({
       where: {
         userID: id

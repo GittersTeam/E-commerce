@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const userController = require("../controllers/users/userController");
 const db = require("../models");
 const User = db.users;
+const Customer = db.customers;
 // middleware to validate token
 const verifyToken = async (req, res, next) => {
  // const token = req.header('auth-token');
@@ -19,7 +20,7 @@ const verifyToken = async (req, res, next) => {
  req.user = user;
  const customer = await Customer.findOne({ where:{userID: userData.id} });
  req.customer = customer
- console.log(user)
+ 
  if(user.userType == 'Customer')
  next() // continuous;
  else
