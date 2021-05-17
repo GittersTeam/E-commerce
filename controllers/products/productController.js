@@ -37,29 +37,29 @@ const addProduct = (req, res) => {
         });
 
 }
-const getAllProducts = (req, res) => {
-    Product.findAll({
-        include: [
-            { model: Subcategory, as: 'subcategory' },
-        ]
-    })
-        .then(data => {
-            res.send({
-                'data': data,
-                'message': "list of products",
-                'status': 200
-            });
+// const getAllProducts = (req, res) => {
+//     Product.findAll({
+//         include: [
+//             { model: Subcategory, as: 'subcategory' },
+//         ]
+//     })
+//         .then(data => {
+//             res.send({
+//                 'data': data,
+//                 'message': "list of products",
+//                 'status': 200
+//             });
 
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving products."
-            });
-        });
+//         })
+//         .catch(err => {
+//             res.status(500).send({
+//                 message:
+//                     err.message || "Some error occurred while retrieving products."
+//             });
+//         });
 
 
-}
+// }
 const getProductByID = (req, res) => {
     Product.findOne({ where: { productID: req.params.id } })
         .then(data => {
