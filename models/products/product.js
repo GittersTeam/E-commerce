@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'subcategories',
                 key: 'uuid'
             }
-          },
+        },
         brandID: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -78,6 +78,10 @@ module.exports = (sequelize, DataTypes) => {
             },
 
         },
+        isPublished: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        }
     }, { tableName: "products" });
 
 

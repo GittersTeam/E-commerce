@@ -1,9 +1,16 @@
 const db = require("../../models");
+const user = require("../../models/users/user");
+const userCont = require("../../controllers/users/userController")
 const Product = db.products;
 const Package = db.packages;
 const Subcategory = db.subcategories;
 const PackageProducts = db.packageProducts;
 const Category = db.categories;
+const Brand = db.brands;
+const User = db.users
+
+
+
 const addProduct = (req, res) => {
     const product = {
         brandID: req.body.brandID,
@@ -19,6 +26,7 @@ const addProduct = (req, res) => {
         barCodeNumber: req.body.barCodeNumber,
         photo: req.body.photo ? req.body.photo : [],
         subcategoryId: req.body.subcategoryId,
+        isPublished: req.body.isPublished
 
     };
     Product.create(product)
@@ -36,107 +44,67 @@ const addProduct = (req, res) => {
         });
 
 }
-const getAllProducts = (req, res) => {
-    Product.findAll({
-            include: [
-                { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts },
-            ]
-        })
-        .then(data => {
-            res.send({
-                'data': data,
-                'message': "list of products",
-                'status': 200
-            });
+// const getAllProducts = (req, res) => {
+//     Product.findAll({
+//         include: [
+//             { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts }, { model: Brand, as: 'brand' },
+//         ]
+//     })
+//         .then(data => {
+//             res.send({
+//                 'data': data,
+//                 'message': "list of products",
+//                 'status': 200
+//             });
 
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving products."
-            });
-        });
+//         })
+//         .catch(err => {
+//             res.status(500).send({
+//                 message: err.message || "Some error occurred while retrieving products."
+//             });
+//         });
 
 
-}
+// }
 const getProductByID = (req, res) => {
-        Product.findOne({
-                where: { productID: req.params.id },
-                include: [
-                    { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts },
-                ]
-            })
-            .then(data => {
+    Product.findOne({
+        where: { productID: req.params.id },
+        include: [
+            { model: Subcategory, as: 'subcategory' },
+            { model: Package, through: PackageProducts },
+            { model: Brand, as: 'brand' },
+        ]
+    })
+        .then(data => {
+            if (data != null) {
                 data.photo = JSON.parse(data.photo)
                 res.send({
                     data: data,
                     msg: "The product was found successfully "
                 });
 
-
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving the product."
+            } else {
+                res.send({
+                    data: data,
+                    msg: "The product was not found"
                 });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving the product."
             });
+        });
 
-    }
-    // const deleteColor = async (req, res) => {
-    //     const mycolor = {
-    //         hex_value: req.body.hex_value,
-    //         colour_name: req.body.colour_name
-    //     }
-    //     const id = req.params.id;
-    //     try {
-    //         const product = await Product.findOne({ where: { productID: id } })
-    //         console.log('Array of colors: ', product.color)
-
-//         for (let i = 0; i < product.color.length; i++) {
-//             if (product.color[i] == mycolor) {
-//                 product.color.splice(i, 1);
-//             }
-//         }
-//         Product.update(product.color, {
-//             where: { productID: id }
-//         })
-//         // return res.json(product)
-//     }
-//     catch (err) {
-//         console.log(err);
-//         return res.status.json({ error: `Some error occurred while retrieving color ` })
-//     }
-
-
-// }
-// const addColor = async (req, res, next) => {
-//     const mycolor = {
-//         hex_value: req.body.hex_value,
-//         colour_name: req.body.colour_name
-//     }
-//     const id = req.params.id;
-//     try {
-//         const product = await Product.findOne({ where: { productID: id } })
-//         console.log('Array of colors: ', product)
-//         product.color.push(mycolor);
-
-//         Product.update(product.color, {
-//             where: { productID: id }
-//         })
-//     }
-//     catch (err) {
-//         console.log(err);
-//         return res.status.json({ error: `Some error occurred while retrieving color ` })
-//     }
-
-// }
-
+}
 
 const updateProduct = (req, res) => {
     const productID = req.params.id;
 
     Product.update(req.body, {
-            where: { productID: productID }
-        })
+        where: { productID: productID }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -158,8 +126,8 @@ const deleteProductByID = (req, res) => {
     const productID = req.params.id;
 
     Product.destroy({
-            where: { productID: productID }
-        })
+        where: { productID: productID }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -177,16 +145,22 @@ const deleteProductByID = (req, res) => {
             });
         });
 }
-const deleteAllProducts = function(req, res) {
+const deleteAllProducts = function (req, res) {
 
     Product.destroy({
-            where: {},
-            truncate: false
-        })
+        where: {},
+        truncate: false
+    })
         .then(num => {
-            res.send({
-                message: `${num} Products were deleted successfully!`
-            });
+            if (num == 1) {
+                res.send({
+                    message: `${num} products were deleted successfully!`
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete products. Maybe there are no products to delete`
+                });
+            }
 
         })
         .catch(err => {
@@ -195,6 +169,44 @@ const deleteAllProducts = function(req, res) {
             });
         });
 }
+const getAllProducts = async function (req, res) {
+    const brandID = req.params.brandID ? req.params.brandID : "";
+    // const brand = await Brand.findOne({ where: { brandID: brandID } })
+    const token = req.headers['authorization'];
+    var users = userCont.parseJwt(token);
+    var condition = { isPublished: true }
+    if (token != null) {
+        const user = await User.findOne({ where: { userID: users.id } });
+        if ((user != null && user.userType == 'Admin')) {
+            condition = {}
+        }
+    }
+    console.log(users)
 
+    Product.findAll({
+        where: condition
+    })
+        .then(data => {
+            res.send({
+                'data': data,
+                'message': "Products retrieved successfully",
+                'status': 200
+            });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving products."
+            });
+        });
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts };
+}
+
+module.exports = {
+    getAllProducts,
+    addProduct,
+    deleteProductByID,
+    updateProduct,
+    getProductByID,
+    deleteAllProducts
+};

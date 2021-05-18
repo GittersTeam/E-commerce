@@ -11,7 +11,6 @@ const addPackage = (req, res) => {
         currency: req.body.currency,
         description: req.body.description,
         photo: req.body.photo ? req.body.photo : [],
-
     };
     Package.create(package)
         .then(data => {
@@ -30,14 +29,14 @@ const addPackage = (req, res) => {
 }
 const getAllPackages = (req, res) => {
     Package.findAll({
-            include: [
-                { model: Products, through: PackageProducts },
-            ]
-        })
+        include: [
+            { model: Products, through: PackageProducts },
+        ]
+    })
         .then(data => {
             res.send({
                 'data': data,
-                'message': "list of packages",
+                'message': "List of packages",
                 'status': 200
             });
 
@@ -51,23 +50,32 @@ const getAllPackages = (req, res) => {
 
 }
 const getPackageByID = (req, res) => {
-    console.log("here")
     Package.findOne({
-            where: { packageID: req.params.id },
-            include: [
-                { model: Products, through: PackageProducts },
-            ]
-        })
+        where: { packageID: req.params.id },
+        include: [
+            { model: Products, through: PackageProducts },
+        ]
+    })
         .then(data => {
-            data.photo = JSON.parse(data.photo)
-            res.send({
-                data: data,
-                msg: "The package was found successfully "
-            });
+            if (data != null) {
+                data.photo = JSON.parse(data.photo)
+                res.send({
+                    data: data,
+                    msg: "The package was found successfully "
+                });
+            }
+            else {
+                res.send({
+                    data: data,
+                    msg: "The package was not found"
+                });
+            }
         })
+
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving the package."
+                message:
+                    err.message || "Some error occurred while retrieving the package with id :" + packageID
             });
         });
 
@@ -78,8 +86,8 @@ const updatePackage = (req, res) => {
     const packageID = req.params.id;
 
     Package.update(req.body, {
-            where: { packageID: packageID }
-        })
+        where: { packageID: packageID }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -101,8 +109,8 @@ const deletePackageByID = (req, res) => {
     const packageID = req.params.id;
 
     Package.destroy({
-            where: { packageID: packageID }
-        })
+        where: { packageID: packageID }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -110,7 +118,7 @@ const deletePackageByID = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: `Cannot delete package, Maybe it was not found!`
+                    message: `Cannot delete package with id=${packageID}. Maybe package was not found !`
                 });
             }
         })
@@ -120,21 +128,27 @@ const deletePackageByID = (req, res) => {
             });
         });
 }
-const deleteAllPackages = function(req, res) {
+const deleteAllPackages = function (req, res) {
 
     Package.destroy({
-            where: {},
-            truncate: false
-        })
+        where: {},
+        truncate: false
+    })
         .then(num => {
-            res.send({
-                message: `${num} Packages were deleted successfully!`
-            });
+            if (num == 1) {
+                res.send({
+                    message: `${num} packages were deleted successfully!`
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete packages. Maybe there are no packages to delete`
+                });
+            }
 
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error deleting packages"
+                message: "Error deleting packages."
             });
         });
 }
@@ -166,8 +180,8 @@ const deleteProductFromPackageByProductID = (req, res) => {
     const productID = req.params.id;
 
     PackageProducts.destroy({
-            where: { packageID: packageID, productID: productID }
-        })
+        where: { packageID: packageID, productID: productID }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -185,4 +199,13 @@ const deleteProductFromPackageByProductID = (req, res) => {
             });
         });
 }
-module.exports = { getAllPackages, addPackage, deleteAllPackages, updatePackage, getPackageByID, deletePackageByID, addProductToPackageByProductID, deleteProductFromPackageByProductID };
+module.exports = {
+    getAllPackages,
+    addPackage,
+    deleteAllPackages,
+    updatePackage,
+    getPackageByID,
+    deletePackageByID,
+    addProductToPackageByProductID,
+    deleteProductFromPackageByProductID
+};
