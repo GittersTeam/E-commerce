@@ -86,7 +86,7 @@ const getProductByID = (req, res) => {
             ],
             limit: 1
         },
-        { model: FlashDeals, foreignKey: 'flashDealID', where: { 'endDate': { [Op.gte]: new Date() } }, },
+        { model: FlashDeals, foreignKey: 'flashDealID', required: false, left: true, where: { 'endDate': { [Op.gte]: new Date() } }, },
         ],
 
     })
