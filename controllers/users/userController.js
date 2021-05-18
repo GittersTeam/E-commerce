@@ -1,6 +1,7 @@
 const db = require("../../models");
 const Customer = db.customers;
 const User = db.users;
+const Cart = db.carts;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 const atob = require('atob');
@@ -8,6 +9,7 @@ const {
     hashSync,
     genSaltSync
 } = require('bcrypt');
+const customer = require("../../models/customers/customer");
 
 
 const getAllUser = (req, res) => {
@@ -29,7 +31,7 @@ const getAllUser = (req, res) => {
 
 const getUserByID = (req, res) => {
 
-    User.findByPk(req.user.userID)
+    User.findByPk(req.userData.userID)
         .then(data => {
             res.send({
                 data: data,
@@ -46,7 +48,7 @@ const getUserByID = (req, res) => {
 
 const updateUser = (req, res) => {
 
-    const id = req.user.userID;
+    const id = req.userData.userID;
     User.update(req.body, {
             where: {
                 userID: id
@@ -90,7 +92,7 @@ const updateUserPassword = (req, res) => {
     var salt = genSaltSync(10)
     password = hashSync(req.body.password, salt)
 
-    const id = req.user.userID;
+    const id = req.userData.userID;
     User.update({
             password: password
         }, {
@@ -116,7 +118,7 @@ const updateUserPassword = (req, res) => {
         });
 }
 const deleteUserByID = (req, res) => {
-    const id = req.user.userID;
+    const id = req.userData.userID;
     User.destroy({
             where: {
                 userID: id
@@ -185,17 +187,32 @@ const signUp = async(req, res) => {
     };
     User.create(user)
         .then(data => {
-            const customer = {
-                phoneNumber: req.body.phoneNumber,
-                birthDay: req.body.birthDay,
-                userID: data.userID
+            const cart = {
+                products: req.body.products,
+                packages: req.body.packages
             };
             console.log(customer)
-            Customer.create(customer).then(dataC => {
-                res.send({
-                    userData: data,
-                    customerData: dataC
-                })
+            Cart.create(cart).then(dataC => {
+                const customer = {
+                    phoneNumber: req.body.phoneNumber,
+                    birthDay: req.body.birthDay,
+                    userID: data.userID,
+                    cartID: dataC.cartID
+                };
+                Customer.create(customer)
+                    .then(dataCustomer => {
+                        res.send({
+                            userData: data,
+                            customerData: dataCustomer,
+                            cartData: dataC
+
+                        });
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message: err.message || "Some error occurred while creating the Cart."
+                        });
+                    })
             }).catch(err => {
                 res.status(500).send({
                     message: "Some error occurred while creating the customer."
@@ -210,7 +227,6 @@ const signUp = async(req, res) => {
 }
 
 const signIn = async function(req, res) {
-    console.log(req.body)
     const user = await User.findOne({ where: { email: req.body.email } });
     if (!user) return res.status(400).json({ error: 'user not found' });
     // check user password with hashed password stored in the database
@@ -218,10 +234,18 @@ const signIn = async function(req, res) {
     if (!validPassword) return res.status(400).json({
         error: 'Invalid Password'
     });
-    // create token
-    const token = jwt.sign({
-            id: user.userID,
-        }, process.env.JWT_SECRET, {}) //expiresIn:'2h'
+
+    var token = jwt.sign({
+        userID: user.userID,
+        userType: user.userType
+    }, process.env.JWT_SECRET, {})
+
+    if (user.userType == 'Customer') {
+        const customer = await Customer.findOne({ where: { userID: user.userID } });
+        token.customerID = customer.customerID
+        token.cartID = customer.cartID
+    }
+
     res.json({
         data: 'singin success',
         user: user,

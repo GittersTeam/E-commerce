@@ -1,8 +1,13 @@
 const db = require("../../models");
 const Address = db.addresses;
+const Customer = db.customers;
+const User = db.users;
 const getAddress = (req, res) => { //is admin
 
-    Address.findAll() // convert to sql query
+    Address.findAll({
+        where:{},
+        include:{model: Customer, as: 'customer'}
+    }) // convert to sql query
         .then(data => {
             res.send({
                 'data': data,
@@ -19,8 +24,8 @@ const getAddress = (req, res) => { //is admin
 const getAddressForOneCustomerByID = (req, res) => { //is customer
 
     Address.findAll({
-        where:{customerID: req.customer.customerID}
-            
+        where:{customerID: req.customer.customerID},
+        include:{model: Customer, as: 'customer'}            
         })
         .then(data => {
             res.send({
@@ -107,7 +112,7 @@ const deleteAddressByID = (req, res) => {
 }
 
 const deleteAllAddress = (req, res) => {
-    const customerID = req.params.id
+    const customerID = req.customer.customerID
     Address.destroy({
             where: {
                 customerID: customerID

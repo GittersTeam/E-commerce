@@ -52,10 +52,10 @@ db.categories.belongsTo(db.departments, { foreignKey: 'departmentId', as: 'depar
 db.categories.hasMany(db.subcategories, { foreignKey: 'categoryId', as: 'subcategories' })
 db.subcategories.belongsTo(db.categories, { foreignKey: 'categoryId', as: 'category' })
 
-db.addresses.belongsTo(db.customers, { foreignKey: 'customerID' });
-db.customers.hasMany(db.addresses, { foreignKey: 'customerID' });
-db.customers.belongsTo(db.users, { foreignKey: 'userID' });
-db.users.hasOne(db.customers, { foreignKey: 'userID' });
+db.addresses.belongsTo(db.customers, { foreignKey: 'customerID', as: 'customer' });
+db.customers.hasMany(db.addresses, { foreignKey: 'customerID' , as: 'addresses'});
+db.customers.belongsTo(db.users, { foreignKey: 'userID', as: 'user' });
+db.users.hasOne(db.customers, { foreignKey: 'userID', as:'customer' });
 
 db.subcategories.hasMany(db.products, { foreignKey: 'subcategoryId', as: 'products' })
 db.products.belongsTo(db.subcategories, { foreignKey: 'subcategoryId', as: 'subcategory' })
@@ -69,8 +69,8 @@ db.reviews.belongsTo(db.products, { foreignKey: 'productID', as: 'products' })
 db.customers.hasMany(db.reviews, { foreignKey: 'customerID', as: 'reviews' })
 db.reviews.belongsTo(db.customers, { foreignKey: 'customerID', as: 'customers' })
 
-db.carts.belongsTo(db.customers, { foreignKey: 'customerID' });
-db.customers.hasOne(db.carts, { foreignKey: 'cartID' });
+db.customers.belongsTo(db.carts, { foreignKey: 'cartID' , as: 'cart'});
+db.carts.hasOne(db.customers, { foreignKey: 'cartID', as: 'customer' });
 
 db.customers.hasMany(db.orders, { foreignKey: 'customerID', as: 'orders' })
 db.orders.belongsTo(db.customers, { foreignKey: 'customerID', as: 'customers' })

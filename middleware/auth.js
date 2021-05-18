@@ -17,10 +17,7 @@ const verifyToken = async(req, res, next) => {
         //req.user = verified;
 
         var userData = userController.parseJwt(bearerToken);
-        const user = await User.findOne({ where: { userID: userData.id } });
-        req.user = user;
-        const customer = await Customer.findOne({ where: { userID: userData.id } });
-        req.customer = customer
+        req.userData = userData
         next() // continuamos;
     } catch (error) {
         res.status(400).json({ error: 'token not valid' });
