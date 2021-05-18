@@ -1,37 +1,41 @@
 const db = require("../../models");
 const Op = db.Sequelize.Op;
 const Sale = db.sales
-const getAllSales = (req, res) => {
-    Sale.findAll({
-            // include:{
-            //     model:Products
-            // }
-        })
-        .then(data => {
-            res.send({
-                "data": data,
-                "message": "Sale retrieved successfully",
-                "status": 200
-
-            });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving Sale."
-            });
+const getAllSales = async (req, res) => {
+    const sale = await Sale.findAll({
+        order: [
+            ['productID', 'ASC'],
+            ['createdAt', 'DESC'],
+        ],
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving Sale."
         });
+    });
+    var temp = [];
+    var index = [];
+    sale.filter(function (item) {
+        return temp.indexOf(item.productID) >= 0 ? false : index.push(item), temp.push(item.productID);
+    });
+    res.send({
+        "data": index,
+        "message": "Sale retrieved successfully",
+        "status": 200
+
+    });
+
     return;
 
 }
 const getSaleByID = (req, res) => {
     Sale.findOne({
-            where: {
-                id: req.params.id
-            },
-            // include:{
-            //     model:Products
-            // }
-        })
+        where: {
+            id: req.params.id
+        },
+        // include:{
+        //     model:Products
+        // }
+    })
         .then(data => {
             res.send({
                 "data": data,
@@ -82,8 +86,8 @@ const updateSale = (req, res) => {
     const id = req.params.id;
 
     Sale.update(req.body, {
-            where: { id: id }
-        })
+        where: { id: id }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -108,8 +112,8 @@ const deleteSaleByID = (req, res) => {
     const id = req.params.id;
 
     Sale.destroy({
-            where: { id: id }
-        })
+        where: { id: id }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
