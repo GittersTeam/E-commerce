@@ -25,7 +25,6 @@ module.exports = {
   sales,
   reviews,
   flashDeals,
-  dealProducts,
   uploads,
   orders,
   carts,
