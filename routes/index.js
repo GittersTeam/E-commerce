@@ -33,7 +33,6 @@ router.use('/departments', departmentsRouter);
 router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter);
 router.use('/sales', salesRouter);
-router.use('/flash-deals/products', flashDealsRouter);
 router.use('/flash-deals', flashDealsRouter);
 router.use('/uploads', [isAdmin], uploadsRouter);
 router.use('/advertisements', advertisementsRouter);

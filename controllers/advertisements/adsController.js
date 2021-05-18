@@ -27,13 +27,22 @@ const getAdByID = (req, res) => {
             }
         })
         .then(data => {
-            data.keywords = JSON.parse(data.keywords)
-            data.photos = JSON.parse(data.photos)
-            res.send({
-                "data": data,
-                "message": "Ad retrieved successfully",
-                "status": 200
-            });
+            if (data !== null) {
+
+                data.keywords = JSON.parse(data.keywords)
+                data.photos = JSON.parse(data.photos)
+                res.send({
+                    "data": data,
+                    "message": "Ad retrieved successfully",
+                    "status": 200
+                });
+            } else {
+                res.send({
+                    "data": null,
+                    "message": "Ad not found!",
+                    "status": 200
+                });
+            }
         })
         .catch(err => {
             res.status(500).send({

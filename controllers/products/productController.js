@@ -1,6 +1,8 @@
 const db = require("../../models");
 const Product = db.products;
+const Package = db.packages;
 const Subcategory = db.subcategories;
+const PackageProducts = db.packageProducts;
 const Category = db.categories;
 const addProduct = (req, res) => {
     const product = {
@@ -29,18 +31,17 @@ const addProduct = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message:
-                    err.message || "Some error occurred while adding the product."
+                message: err.message || "Some error occurred while adding the product."
             });
         });
 
 }
 const getAllProducts = (req, res) => {
     Product.findAll({
-        include: [
-            { model: Subcategory, as: 'subcategory' },
-        ]
-    })
+            include: [
+                { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts },
+            ]
+        })
         .then(data => {
             res.send({
                 'data': data,
@@ -51,41 +52,44 @@ const getAllProducts = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving products."
+                message: err.message || "Some error occurred while retrieving products."
             });
         });
 
 
 }
 const getProductByID = (req, res) => {
-    Product.findOne({ where: { productID: req.params.id } })
-        .then(data => {
-            data.photo = JSON.parse(data.photo)
-            res.send({
-                data: data,
-                msg: "The product was found successfully "
+        Product.findOne({
+                where: { productID: req.params.id },
+                include: [
+                    { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts },
+                ]
+            })
+            .then(data => {
+                data.photo = JSON.parse(data.photo)
+                res.send({
+                    data: data,
+                    msg: "The product was found successfully "
+                });
+
+
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving the product."
+                });
             });
 
-
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving the product."
-            });
-        });
-
-}
-// const deleteColor = async (req, res) => {
-//     const mycolor = {
-//         hex_value: req.body.hex_value,
-//         colour_name: req.body.colour_name
-//     }
-//     const id = req.params.id;
-//     try {
-//         const product = await Product.findOne({ where: { productID: id } })
-//         console.log('Array of colors: ', product.color)
+    }
+    // const deleteColor = async (req, res) => {
+    //     const mycolor = {
+    //         hex_value: req.body.hex_value,
+    //         colour_name: req.body.colour_name
+    //     }
+    //     const id = req.params.id;
+    //     try {
+    //         const product = await Product.findOne({ where: { productID: id } })
+    //         console.log('Array of colors: ', product.color)
 
 //         for (let i = 0; i < product.color.length; i++) {
 //             if (product.color[i] == mycolor) {
@@ -131,8 +135,8 @@ const updateProduct = (req, res) => {
     const productID = req.params.id;
 
     Product.update(req.body, {
-        where: { productID: productID }
-    })
+            where: { productID: productID }
+        })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -154,8 +158,8 @@ const deleteProductByID = (req, res) => {
     const productID = req.params.id;
 
     Product.destroy({
-        where: { productID: productID }
-    })
+            where: { productID: productID }
+        })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -173,12 +177,12 @@ const deleteProductByID = (req, res) => {
             });
         });
 }
-const deleteAllProducts = function (req, res) {
+const deleteAllProducts = function(req, res) {
 
     Product.destroy({
-        where: {},
-        truncate: false
-    })
+            where: {},
+            truncate: false
+        })
         .then(num => {
             res.send({
                 message: `${num} Products were deleted successfully!`

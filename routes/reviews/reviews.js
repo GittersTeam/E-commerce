@@ -2,11 +2,12 @@ var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers')
 const isAuth = require('../../middleware/Auth');
+const isCustomer = require('../../middleware/isCustomer');
 
-router.get('/', [isAuth], controller.reviews.getAllReviews) //Get all reviews for a product by product id
-router.get('/:id', [isAuth], controller.reviews.getReviewByID) //get a review by id for a product by id
+router.get('/:pid', [isAuth], controller.reviews.getAllReviewsByProductID) //pid is product id 
+router.get('/:pid/:id', [isAuth], controller.reviews.getReviewByIDByProductID) //pid is product id, id is review id
 
-router.post('/', [isAuth], controller.reviews.addReview)
+router.post('/', [isCustomer], controller.reviews.addReview)
 
 router.put('/:id', [isAuth], controller.reviews.updateReview)
 

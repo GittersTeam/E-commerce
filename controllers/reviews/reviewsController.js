@@ -1,8 +1,12 @@
 const db = require("../../models");
 const Op = db.Sequelize.Op;
 const Review = db.reviews
-const getAllReviews = (req, res) => {
-    Review.findAll()
+const getAllReviewsByProductID = (req, res) => {
+    Review.findAll({
+            where: {
+                productID: req.params.pid
+            }
+        })
         .then(data => {
             res.send({
                 "data": data,
@@ -19,8 +23,13 @@ const getAllReviews = (req, res) => {
     return;
 
 }
-const getReviewByID = (req, res) => {
-    Review.findByPk(req.params.id)
+const getReviewByIDByProductID = (req, res) => {
+    Review.findOne({
+            where: {
+                productID: req.params.pid,
+                id: req.params.id,
+            }
+        })
         .then(data => {
             res.send({
                 "data": data,
@@ -122,8 +131,8 @@ const deleteReviewByID = (req, res) => {
 
 
 module.exports = {
-    getAllReviews,
-    getReviewByID,
+    getAllReviewsByProductID,
+    getReviewByIDByProductID,
     addReview,
     updateReview,
     deleteReviewByID,

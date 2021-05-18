@@ -1,8 +1,14 @@
 const db = require("../../models");
 const Op = db.Sequelize.Op;
 const FlashDeal = db.flashDeals
+const DealProductPrice = db.dealProductPrice
+const Products = db.products
 const getAllFlashDeals = (req, res) => {
-    FlashDeal.findAll()
+    FlashDeal.findAll({
+            include: [
+                { model: Products, through: DealProductPrice },
+            ]
+        })
         .then(data => {
             res.send({
                 "data": data,
@@ -22,8 +28,11 @@ const getAllFlashDeals = (req, res) => {
 const getFlashDealByID = (req, res) => {
     FlashDeal.findOne({
             where: {
-                id: req.params.id
-            }
+                flashDealID: req.params.id
+            },
+            include: [
+                { model: Products, through: DealProductPrice },
+            ]
         })
         .then(data => {
             res.send({
@@ -49,12 +58,12 @@ const addFlashDeal = (req, res) => {
         });
         return;
     }
-
     // Create a Tutorial
     const flashDeal = {
         desc: req.body.desc,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
+
     };
 
     // Save Tutorial in the database
@@ -101,7 +110,7 @@ const deleteFlashDealByID = (req, res) => {
     const id = req.params.id;
 
     FlashDeal.destroy({
-            where: { id: id }
+            where: { flashDealID: id }
         })
         .then(num => {
             if (num == 1) {
@@ -121,115 +130,99 @@ const deleteFlashDealByID = (req, res) => {
         });
 
 }
-const getAllDealProducts = (req, res) => {
-    // DealProduct.findAll()
-    //     .then(data => {
-    //         res.send({
-    //             "data": data,
-    //             "message": "Deal Product retrieved successfully",
-    //             "status": 200
 
-    //         });
-    //     })
-    //     .catch(err => {
-    //         res.status(500).send({
-    //             message: err.message || "Some error occurred while retrieving Deal Products."
-    //         });
-    //     });
-    return;
 
-}
+//Products in Flash Deals
+const addProductToFlashDeal = (req, res) => {
 
-const addDealProduct = (req, res) => {
+    // Validate request
+    if (!req.body.productID || !req.body.flashDealID || !req.body.price) {
+        res.status(400).send({
+            message: "Product ID, Flash Deal ID, or Price can not be empty!"
+        });
+        return;
+    }
+    // Create a Tutorial
+    const entry = {
+        productID: req.body.productID,
+        flashDealID: req.body.flashDealID,
+        price: req.body.price,
 
-    // // Validate request
-    // if (!req.body.dealID || !req.body.productID || !req.body.price) {
-    //     res.status(400).send({
-    //         message: "Deal ID, product ID, or price can not be empty!"
-    //     });
-    //     return;
-    // }
+    };
 
-    // // Create a Tutorial
-    // const dealProduct = {
-    //     dealID: req.body.dealID,
-    //     productID: req.body.productID,
-    //     price: req.body.price,
-    // };
-
-    // // Save Tutorial in the database
-    // DealProduct.create(dealProduct)
-    //     .then(data => {
-    //         res.send(data);
-    //     })
-    //     .catch(err => {
-    //         res.status(500).send({
-    //             message: err.message || "Some error occurred while creating the DealProduct."
-    //         });
-    //     });
+    // Save Tutorial in the database
+    DealProductPrice.create(entry)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating the product in the flash deal."
+            });
+        });
 
 
 }
-const updateDealProduct = (req, res) => {
+const updateProductinFlashDeal = (req, res) => {
 
-    // const id = req.params.id;
+    const id = req.params.id;
 
-    // DealProduct.update(req.body, {
-    //         where: { dealID: id }
-    //     })
-    //     .then(num => {
-    //         if (num == 1) {
-    //             res.send({
-    //                 message: "DealProduct was updated successfully."
-    //             });
-    //         } else {
-    //             res.send({
-    //                 message: `Cannot update DealProduct with id=${id}. Maybe DealProduct was not found or req.body is empty!`
-    //             });
-    //         }
-    //     })
-    //     .catch(err => {
-    //         res.status(500).send({
-    //             message: "Error updating DealProduct with id=" + id
-    //         });
-    //     });
+    DealProductPrice.update(req.body, {
+            where: { productID: id }
+        })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Flash Deal was updated successfully."
+                });
+            } else {
+                res.send({
+                    message: `Cannot update Flash Deal with id=${id}. Maybe Flash Deal was not found or req.body is empty!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error updating FlashDeal with id=" + id
+            });
+        });
+
+}
+
+const deleteProductInFlashDeal = (req, res) => {
+
+    const id = req.params.id;
+
+    DealProductPrice.destroy({
+            where: { productID: id }
+        })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "FlashDeal was deleted successfully."
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete FlashDeal with id=${id}. Maybe FlashDeal was not found!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error deleting FlashDeal with id=" + id
+            });
+        });
 
 }
 
-const deleteDealProductByID = (req, res) => {
-
-    // const id = req.params.id;
-
-    // DealProduct.destroy({
-    //         where: { dealID: id }
-    //     })
-    //     .then(num => {
-    //         if (num == 1) {
-    //             res.send({
-    //                 message: "DealProduct was deleted successfully."
-    //             });
-    //         } else {
-    //             res.send({
-    //                 message: `Cannot delete DealProduct with id=${id}. Maybe DealProduct was not found!`
-    //             });
-    //         }
-    //     })
-    //     .catch(err => {
-    //         res.status(500).send({
-    //             message: "Error deleting DealProduct with id=" + id
-    //         });
-    //     });
-
-}
 
 module.exports = {
-    getAllDealProducts,
-    addDealProduct,
-    updateDealProduct,
-    deleteDealProductByID,
     getAllFlashDeals,
     getFlashDealByID,
     addFlashDeal,
     updateFlashDeal,
     deleteFlashDealByID,
+    addProductToFlashDeal,
+    updateProductinFlashDeal,
+    deleteProductInFlashDeal,
 }
