@@ -5,10 +5,15 @@ const DealProductPrice = db.dealProductPrice
 const Products = db.products
 const getAllFlashDeals = (req, res) => {
     FlashDeal.findAll({
-            include: [
-                { model: Products, through: DealProductPrice },
-            ]
-        })
+        include: [
+            { model: Products, through: DealProductPrice },
+        ],
+        where: {
+            'endDate': {
+                [Op.gte]: new Date()
+            }
+        }
+    })
         .then(data => {
             res.send({
                 "data": data,
@@ -27,13 +32,18 @@ const getAllFlashDeals = (req, res) => {
 }
 const getFlashDealByID = (req, res) => {
     FlashDeal.findOne({
-            where: {
-                flashDealID: req.params.id
-            },
-            include: [
-                { model: Products, through: DealProductPrice },
-            ]
-        })
+        where: [
+            { flashDealID: req.params.id },
+            {
+                'endDate': {
+                    [Op.gte]: new Date()
+                }
+            }
+        ],
+        include: [
+            { model: Products, through: DealProductPrice },
+        ]
+    })
         .then(data => {
             res.send({
                 "data": data,
@@ -84,8 +94,8 @@ const updateFlashDeal = (req, res) => {
     const id = req.params.id;
 
     FlashDeal.update(req.body, {
-            where: { id: id }
-        })
+        where: { id: id }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -110,8 +120,8 @@ const deleteFlashDealByID = (req, res) => {
     const id = req.params.id;
 
     FlashDeal.destroy({
-            where: { flashDealID: id }
-        })
+        where: { flashDealID: id }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -168,8 +178,8 @@ const updateProductinFlashDeal = (req, res) => {
     const id = req.params.id;
 
     DealProductPrice.update(req.body, {
-            where: { productID: id }
-        })
+        where: { productID: id }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -194,8 +204,8 @@ const deleteProductInFlashDeal = (req, res) => {
     const id = req.params.id;
 
     DealProductPrice.destroy({
-            where: { productID: id }
-        })
+        where: { productID: id }
+    })
         .then(num => {
             if (num == 1) {
                 res.send({
