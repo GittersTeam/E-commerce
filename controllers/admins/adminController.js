@@ -59,6 +59,26 @@ const addAdmin = async (req, res) => {
       });
     });
 }
+
+const getAdmin = (req, res) => {
+
+  User.findAll(
+ {
+   where:{userType:"Admin"},
+})
+
+   .then(data => {
+     res.send({
+       data: data,
+     });
+   })
+   .catch(err => {
+     res.status(500).send({
+       message: err.message || "Some error occurred while retrieving Admins."
+     });
+   });
+}
 module.exports = {
-  addAdmin:addAdmin
+  addAdmin:addAdmin,
+  getAdmin:getAdmin
 }

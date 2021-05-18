@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 
 const getallProduct=function(req, res){
  
-  Cart.findOne({where:{ customerID:req.customer.customerID} })
+  Cart.findOne({where:{ cartID:req.userData.cartID} })
   
     .then(data => {
       res.send(data);
@@ -19,26 +19,10 @@ const getallProduct=function(req, res){
   }
 
  
-    const AddProduct=function(req, res){
-
-        const cart= {
-          customerID:req.body.customerID
-        };
-        Cart.create(cart)
-        .then(data => {
-          res.send(data);
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the room."
-          });
-        });}
-       
-       const updateCart=function(req, res){
+   const updateCart=function(req, res){
     
     Cart.update(req.body, {
-        where: { customerID:req.customer.customerID }
+      where:{cartID:req.userData.cartID}
       })
         .then(num => {
           if (num == 1) {
@@ -47,18 +31,15 @@ const getallProduct=function(req, res){
             });
           } else {
             res.send({
-              message: 'Cannot cart a room with id=${id}'
+              message: 'Cannot update a cart with id=${id}'
             });
           }
         })
       
         .catch(err => {
           res.status(500).send({
-            message: "Error updating Student with id=" + id
+            message: "Error updating cart with id=" + id
           });
-        });
-           
-  
-           
+        });  
         }
-         module.exports = {getallProduct,updateCart,AddProduct}
+         module.exports = {getallProduct,updateCart}
