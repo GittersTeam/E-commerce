@@ -21,6 +21,15 @@ module.exports = (sequelize, Sequelize) => {
           model: 'users', //table name 
           key: 'userID'
         }
+      },
+      cartID: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull:false,
+        references: {
+          model: 'carts', //table name 
+          key: 'cartID'
+        }
       }
 
     },{

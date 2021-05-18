@@ -1,6 +1,7 @@
 const db = require("../../models");
 const Customer = db.customers;
 const User = db.users;
+const Cart = db.carts;
 const jwt = require('jsonwebtoken'); 
 const bcrypt = require('bcrypt')
 const atob = require('atob');
@@ -8,6 +9,7 @@ const {
   hashSync,
   genSaltSync
 } = require('bcrypt');
+const customer = require("../../models/customers/customer");
 
 
 const getAllUser = (req, res) => {
@@ -192,9 +194,26 @@ const signUp = async (req, res) => {
       };
       console.log(customer)
       Customer.create(customer).then(dataC => {
-        res.send({
+        const cart= {
+          products: req.body.products,
+          packages:req.body.packages,
+          customerID:dataC.customerID
+
+        };
+        Cart.create(cart)
+        .then(dataCart => {
+          res.send({
           userData: data,
-          customerData: dataC
+          customerData: dataC,
+          cartData:dataCart
+
+          });
+        })
+        .catch(err => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the Cart."
+          });
         })
       }).catch(err => {
         res.status(500).send({
@@ -217,11 +236,18 @@ const signIn = async function (req, res) {
  );
   if (!validPassword) return res.status(400).json({ error: 'Invalid Password'
  });
-  // create token
-  const token = jwt.sign({
-  id: user.userID,
-  }, process.env.JWT_SECRET,{expiresIn:'2h'})
-  res.json({
+
+ var token = jwt.sign({
+  userID: user.userID,
+  userType: user.userType}, process.env.JWT_SECRET,{})
+
+ if(user.userType == 'Customer'){
+ const customer = await Customer.findOne({ where:{userID: user.userID} });
+ token.customerID= customer.customerID
+ token.cartID = customer.cartID
+ }
+
+ res.json({
   data: 'singin success',
   user: user,
   token: token
