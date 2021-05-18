@@ -9,7 +9,8 @@ const Orders = db.orders;
 const Product = db.products;
 const Brands = db.brands;
 const Departments = db.departments;
-
+const Sales = db.sales
+const FlashDeal = db.flashDeals
 const addAdmin = async (req, res) => {
 
   const email = req.body.email
@@ -88,6 +89,8 @@ const getStatistic = (req, res) => {
       numOfOrders: 0,
       numOfDepartments:0,
       numOfBrands:0,
+      numOfSales:0,
+      numOfFlashDeal:0
     }
     Product.findAll().then((data)=>{
       console.log(data.length)
@@ -98,20 +101,22 @@ const getStatistic = (req, res) => {
           statistic['numOfDepartments'] = data.length
           Brands.findAll().then((data)=>{
             statistic['numOfBrands'] = data.length
-              res.send({
-                data: statistic,
-              });
+            Sales.findAll().then(data =>{
+              statistic['numOfSales'] = data.length
+              FlashDeal.findAll().then(data =>{
+                statistic['numOfFlashDeal'] = data.length
+                res.send({
+                  data: statistic,
+                });
+              })
+            })
           })
         })
       })
     })
-    // statistic['numOfBrands'] = data.length > 1 ? data.length : 0
-    
-
-    
 }
 module.exports = {
   addAdmin:addAdmin,
   getAdmin:getAdmin,
-  getStatistic
+  getStatistic:getStatistic
 }
