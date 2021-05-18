@@ -31,7 +31,7 @@ const getAllUser = (req, res) => {
 
 const getUserByID = (req, res) => {
 
-  User.findByPk(req.user.userID)
+  User.findByPk(req.userData.userID)
     .then(data => {
       res.send({
         data: data,
@@ -48,7 +48,7 @@ const getUserByID = (req, res) => {
 
 const updateUser = (req, res) => {
 
-  const id = req.user.userID;
+  const id = req.userData.userID;
   User.update(req.body, {
     where: {
       userID: id
@@ -92,7 +92,7 @@ const updateUserPassword = (req, res) => {
   var salt = genSaltSync(10)
   password = hashSync(req.body.password, salt)
 
-  const id = req.user.userID;
+  const id = req.userData.userID;
   User.update({
     password: password
   }, {
@@ -118,7 +118,7 @@ const updateUserPassword = (req, res) => {
     });
 }
 const deleteUserByID = (req, res) => {
-  const id = req.user.userID;
+  const id = req.userData.userID;
   User.destroy({
     where: {
       userID: id
@@ -187,25 +187,24 @@ const signUp = async (req, res) => {
   };
   User.create(user)
     .then(data => {
-      const customer = {
-        phoneNumber: req.body.phoneNumber,
-        birthDay: req.body.birthDay,
-        userID: data.userID
+      const cart = {
+        products: req.body.products,
+        packages: req.body.packages
       };
       console.log(customer)
-      Customer.create(customer).then(dataC => {
-        const cart = {
-          products: req.body.products,
-          packages: req.body.packages,
-          customerID: dataC.customerID
-
+      Cart.create(cart).then(dataC => {
+        const customer = {
+          phoneNumber: req.body.phoneNumber,
+          birthDay: req.body.birthDay,
+          userID: data.userID,
+          cartID: dataC.cartID
         };
-        Cart.create(cart)
-          .then(dataCart => {
+        Customer.create(customer)
+          .then(dataCustomer => {
             res.send({
               userData: data,
-              customerData: dataC,
-              cartData: dataCart
+              customerData: dataCustomer,
+              cartData: dataC
 
             });
           })

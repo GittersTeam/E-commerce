@@ -112,7 +112,7 @@ const deleteAddressByID = (req, res) => {
 }
 
 const deleteAllAddress = (req, res) => {
-    const customerID = req.params.id
+    const customerID = req.customer.customerID
     Address.destroy({
             where: {
                 customerID: customerID

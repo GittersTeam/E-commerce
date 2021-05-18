@@ -26,7 +26,7 @@ const getCustomerByID = (req, res) => {
    Customer.findAll(
 
   {
-    where:{customerID:req.customer.customerID},
+    where:{customerID:req.userData.customerID},
     include: [{model: Addresses, as: 'addresses'},{model: Cart, as:'cart'},{model:User, as: 'user'}]
 })
 
