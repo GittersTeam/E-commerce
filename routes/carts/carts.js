@@ -8,8 +8,8 @@ const isAuth=require('../../middleware/auth');
 //const isCustomer=require('../../middleware/isCustomer');
 const isAdmin=require('../../middleware/isAdmin');
 
- router.get('/:id',[isAuth], controller.carts.getallProduct);
-  router.put('/:id',[isAuth], controller.carts.updateCart);
+ router.get('/',[isAuth], controller.carts.getCartByID);
+  router.put('/',[isAuth], controller.carts.updateCartByID);
   
 
   

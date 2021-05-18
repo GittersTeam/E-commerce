@@ -13,12 +13,15 @@ module.exports = (sequelize, Sequelize) => {
        type: Sequelize.UUID,
       },
       paymentStatus: {
-        type:Sequelize.STRING,
-        enum: ["pending", "delivered", "cancelled"],
+        type:Sequelize.ENUM('pending', 'delivered', 'cancelled'),
+      
+      },
+     OrderStatus: {
+        type:Sequelize.ENUM('pending','shipped','refunded', 'cancelled'),
       },
       products: { 
         type: Sequelize.JSON,
-  
+
       },
       packages:{
         type: Sequelize.JSON,

@@ -1,9 +1,9 @@
 var express = require('express');
 const db = require("../../models");
-const Cart = db.cart;
+const Cart = db.carts;
 const Op = db.Sequelize.Op;
 
-const getallProduct=function(req, res){
+const getCartByID=function(req, res){
  
   Cart.findOne({where:{ cartID:req.userData.cartID} })
   
@@ -19,7 +19,7 @@ const getallProduct=function(req, res){
   }
 
  
-   const updateCart=function(req, res){
+   const updateCartByID=function(req, res){
     
     Cart.update(req.body, {
       where:{cartID:req.userData.cartID}
@@ -42,4 +42,4 @@ const getallProduct=function(req, res){
           });
         });  
         }
-         module.exports = {getallProduct,updateCart}
+         module.exports = {getCartByID,updateCartByID}

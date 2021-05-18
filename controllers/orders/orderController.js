@@ -1,8 +1,8 @@
 var express = require('express');
 const { orders, customers } = require('../../models');
 const db = require("../../models");
-const Order = db.order;
-const Cart = db.cart;
+const Order = db.orders;
+const Cart = db.carts;
 const Customer=db.customers;
 
 const Op = db.Sequelize.Op;
@@ -10,8 +10,9 @@ const CreateOrder=function(req, res){
        
        const order= {
               OrderDate:new Date(),
-              customerID: req.body.customerID,
-              paymentStatus:req.body.paymentStatus,
+              customerID: req.customer.customerID,
+              paymentStatus:"pending",
+              OrderStatus:"pending",
               products:req.body.products,
               packages:req.body.packages
        
@@ -33,7 +34,7 @@ const CreateOrder=function(req, res){
   
 const getOrders=function(req, res){
 
-  Order.findAll({ include:{model:Customer,as:'customers'}})
+  Order.findAll({ where: {customerID:req.userData.customerID}})
   
     .then(data => {
       res.send(data);
@@ -47,10 +48,8 @@ const getOrders=function(req, res){
   }
 
    const GetorderByID= function(req, res){
- 
-
-      Order.findByPk( { where: {customerID:req.customer.customerID} ,
-          include:{model:customers,as:'customers'}})
+      Order.findOne( { where: {customerID:req.userData.customerID ,id:req.params.id}} )
+        //  include:{model:customers,as:'customers'}})
       
         .then(data => {
           res.send(data);
@@ -66,9 +65,11 @@ const getOrders=function(req, res){
 
        
         const updateOrder=function(req, res){
-     ;
+       
+         
      Order.update(req.body, {
-        where:  { customerID:req.customer.customerID }
+        where:  { customerID:req.userData.customerID ,id:req.params.id }
+       
       })
         .then(num => {
           if (num == 1) {
@@ -90,10 +91,10 @@ const getOrders=function(req, res){
            
         }
        const DeleteOrder = function(req, res){
-
-       
+        console.log(req.params.id )
+        console.log(req.userData.customerID )
           Order.destroy({
-         where: { customerID:req.customer.customerID }
+         where: { customerID:req.userData.customerID ,id:req.params.id}
           })
             .then(num => {
               if (num == 1) {
