@@ -46,8 +46,23 @@ const getOrders=function(req, res){
       });
     });
   }
-
+  const getAllOrdersAdmin=function(req, res){
+console.log("hii khadree")
+    Order.findAll()
+    
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+        message:
+          //  err.message || 
+          "Some error occurred while retrieving tutorials."
+        });
+      });
+    }
    const GetorderByID= function(req, res){
+    console.log("hii khadree")
       Order.findOne( { where: {customerID:req.userData.customerID ,id:req.params.id}} )
         //  include:{model:customers,as:'customers'}})
       
@@ -114,5 +129,5 @@ const getOrders=function(req, res){
             });
            
         }
-          module.exports ={CreateOrder,getOrders,GetorderByID,updateOrder,DeleteOrder}
+          module.exports ={CreateOrder,getOrders,GetorderByID,getAllOrdersAdmin,updateOrder,DeleteOrder}
        
