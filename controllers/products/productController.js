@@ -8,6 +8,7 @@ const PackageProducts = db.packageProducts;
 const Category = db.categories;
 const Brand = db.brands;
 const User = db.users
+const jwt = require('jsonwebtoken')
 
 
 
@@ -170,21 +171,26 @@ const deleteAllProducts = function (req, res) {
         });
 }
 const getAllProducts = async function (req, res) {
-    const brandID = req.params.brandID ? req.params.brandID : "";
+    const brandID = req.query.brandID ? req.query.brandID : "";
     // const brand = await Brand.findOne({ where: { brandID: brandID } })
     const token = req.headers['authorization'];
-    var users = userCont.parseJwt(token);
+
     var condition = { isPublished: true }
     if (token != null) {
-        const user = await User.findOne({ where: { userID: users.id } });
-        if ((user != null && user.userType == 'Admin')) {
+        const bearer = token.split(' ');
+        const bearerToken = bearer[1];
+        const verified = jwt.verify(bearerToken, process.env.JWT_SECRET);
+        var users = userCont.parseJwt(bearerToken);
+        if ((users != null && users.userType == 'Admin')) {
             condition = {}
         }
     }
-    console.log(users)
 
     Product.findAll({
-        where: condition
+        where: condition,
+        include: [
+            { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts }, { model: Brand, as: 'brand' },
+        ]
     })
         .then(data => {
             res.send({
