@@ -32,6 +32,7 @@ module.exports = (sequelize, Sequelize) => {
     },{
       tableName:"addresses",
       timestamps:false,
+      paranoid: true,
     });
   
     return Address;

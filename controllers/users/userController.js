@@ -2,6 +2,7 @@ const db = require("../../models");
 const Customer = db.customers;
 const User = db.users;
 const Cart = db.carts;
+const Address = db.addresses;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 const atob = require('atob');
@@ -10,6 +11,7 @@ const {
   genSaltSync
 } = require('bcrypt');
 const customer = require("../../models/customers/customer");
+const user = require("../../models/users/user");
 
 
 const getAllUser = (req, res) => {
@@ -50,10 +52,10 @@ const updateUser = (req, res) => {
 
   const id = req.userData.userID;
   User.update(req.body, {
-    where: {
-      userID: id
-    }
-  })
+      where: {
+        userID: id
+      }
+    })
     .then(num => {
       if (num == 1) {
         res.send({
@@ -94,12 +96,12 @@ const updateUserPassword = (req, res) => {
 
   const id = req.userData.userID;
   User.update({
-    password: password
-  }, {
-    where: {
-      userID: id
-    }
-  })
+      password: password
+    }, {
+      where: {
+        userID: id
+      }
+    })
     .then(num => {
       if (num == 1) {
         res.send({
@@ -117,18 +119,38 @@ const updateUserPassword = (req, res) => {
       });
     });
 }
-const deleteUserByID = (req, res) => {
+const deleteUserByID =  (req, res) => {
   const id = req.userData.userID;
   User.destroy({
-    where: {
-      userID: id
-    }
-  })
+      where: {
+        userID: id
+      }
+    })
     .then(num => {
-      if (num == 1) {
+      if (req.userData.userType == 'Admin') {
         res.send({
           message: "User was deleted successfully."
         });
+      }
+      if (req.userData.userType == 'Customer') {
+        Customer.destroy({
+          where: {
+            customerID: req.userData.customerID
+          }
+        }).then(num => {
+         if (num == 1) {
+            Address.destroy({
+              where: {
+                customerID: req.userData.customerID
+              }
+            }).then(() => {
+              res.send({
+                message: "User was deleted successfully."
+              });
+            })
+          }
+          
+        })
       } else {
         res.send({
           message: `Cannot delete User with id=${id}. Maybe User was not found!`
@@ -227,25 +249,35 @@ const signUp = async (req, res) => {
 }
 
 const signIn = async function (req, res) {
-  const user = await User.findOne({ where:{email: req.body.email} });
-  if (!user) return res.status(400).json({ error: 'user not found' });
+  const user = await User.findOne({
+    where: {
+      email: req.body.email
+    }
+  });
+  if (!user) return res.status(400).json({
+    error: 'user not found'
+  });
   // check user password with hashed password stored in the database
-  const validPassword = await bcrypt.compare(req.body.password, user.password
- );
-  if (!validPassword) return res.status(400).json({ error: 'Invalid Password'
- });
-var object ={
-  userID:user.userID,
-  userType:user.userType
-}
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) return res.status(400).json({
+    error: 'Invalid Password'
+  });
+  var object = {
+    userID: user.userID,
+    userType: user.userType
+  }
 
-if(user.userType == 'Customer'){
-  const customer = await Customer.findOne({ where:{userID: user.userID} });
-  object["customerID"]= customer.customerID
-  object["cartID"] = customer.cartID
-}
+  if (user.userType == 'Customer') {
+    const customer = await Customer.findOne({
+      where: {
+        userID: user.userID
+      }
+    });
+    object["customerID"] = customer.customerID
+    object["cartID"] = customer.cartID
+  }
 
-const token = jwt.sign(object, process.env.JWT_SECRET,{})
+  const token = jwt.sign(object, process.env.JWT_SECRET, {})
   res.json({
     data: 'singin success',
     user: user,
