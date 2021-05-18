@@ -35,6 +35,7 @@ module.exports = (sequelize, Sequelize) => {
   }, {
     tableName: "customers",
     timestamps: true,
+    paranoid: true,
   });
 
   return Customer;
