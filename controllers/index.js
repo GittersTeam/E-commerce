@@ -16,27 +16,25 @@ const sales = require('./sales/salesController')
 const reviews = require('./reviews/reviewsController')
 const uploads = require('./uploads/uploadsController')
 const flashDeals = require('./flashDeals/flashDealsController')
-const dealProducts = require('./flashDeals/dealProductsController')
 
 module.exports = {
-  departments,
-  categories,
-  subcategories,
-  advertisements,
-  sales,
-  reviews,
-  flashDeals,
-  dealProducts,
-  uploads,
-  orders,
-  carts,
-  products,
-  brands,
-  packages,
-  users,
-  addresses,
-  customers,
-  logins,
-  registrations
+    departments,
+    categories,
+    subcategories,
+    advertisements,
+    sales,
+    reviews,
+    flashDeals,
+    uploads,
+    orders,
+    carts,
+    products,
+    brands,
+    packages,
+    users,
+    addresses,
+    customers,
+    logins,
+    registrations
 
 }

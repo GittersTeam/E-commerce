@@ -2,9 +2,14 @@ const db = require("../../models");
 const user = require("../../models/users/user");
 const userCont = require("../../controllers/users/userController")
 const Product = db.products;
+const Package = db.packages;
 const Subcategory = db.subcategories;
+const PackageProducts = db.packageProducts;
 const Category = db.categories;
 const Brand = db.brands;
+const User = db.users
+
+
 
 const addProduct = (req, res) => {
     const product = {
@@ -34,14 +39,42 @@ const addProduct = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message:
-                    err.message || "Some error occurred while adding the product."
+                message: err.message || "Some error occurred while adding the product."
             });
         });
 
 }
+// const getAllProducts = (req, res) => {
+//     Product.findAll({
+//         include: [
+//             { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts }, { model: Brand, as: 'brand' },
+//         ]
+//     })
+//         .then(data => {
+//             res.send({
+//                 'data': data,
+//                 'message': "list of products",
+//                 'status': 200
+//             });
+
+//         })
+//         .catch(err => {
+//             res.status(500).send({
+//                 message: err.message || "Some error occurred while retrieving products."
+//             });
+//         });
+
+
+// }
 const getProductByID = (req, res) => {
-    Product.findOne({ where: { productID: req.params.id } })
+    Product.findOne({
+        where: { productID: req.params.id },
+        include: [
+            { model: Subcategory, as: 'subcategory' },
+            { model: Package, through: PackageProducts },
+            { model: Brand, as: 'brand' },
+        ]
+    })
         .then(data => {
             if (data != null) {
                 data.photo = JSON.parse(data.photo)
@@ -143,13 +176,13 @@ const getAllProducts = async function (req, res) {
     var users = userCont.parseJwt(token);
     var condition = { isPublished: true }
     if (token != null) {
-        if ((users != null && users.userType == 'Admin')) {
+        const user = await User.findOne({ where: { userID: users.id } });
+        if ((user != null && user.userType == 'Admin')) {
             condition = {}
         }
     }
-    console.log(users.userType)
+    console.log(users)
 
-    // if (req.params == brand.name) {
     Product.findAll({
         where: condition
     })

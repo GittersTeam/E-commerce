@@ -4,10 +4,8 @@ const router = express.Router();
 const isCustomer = require('../middleware/isCustomer');
 const isAuth = require('../middleware/Auth');
 const isAdmin = require('../middleware/isAdmin');
-
 const usersRouter = require('./users/users');
 const customerRouter = require('./customers/customer')
-//const loginRouter = require("./logins/login")
 const registerRouter = require("./registrations/register")
 const addressRouter = require('./addresses/address');
 const cartRouter = require('./carts/carts');
@@ -20,7 +18,6 @@ const advertisementsRouter = require('./advertisements/advertisements')
 const reviewsRouter = require('./reviews/reviews')
 const uploadsRouter = require('./uploads/uploads')
 const flashDealsRouter = require('./flashDeals/flashDeals')
-const dealProductsRouter = require('./flashDeals/dealProducts')
 const departmentsRouter = require('./departments/departments');
 const categoriesRouter = require('./categories/categories');
 const subcategoriesRouter = require('./subcategories/subcategories');
@@ -36,7 +33,6 @@ router.use('/departments', departmentsRouter);
 router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter);
 router.use('/sales', salesRouter);
-router.use('/flash-deals/products', dealProductsRouter);
 router.use('/flash-deals', flashDealsRouter);
 router.use('/uploads', [isAdmin], uploadsRouter);
 router.use('/advertisements', advertisementsRouter);

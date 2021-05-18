@@ -210,8 +210,7 @@ const signUp = async (req, res) => {
           })
           .catch(err => {
             res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the Cart."
+              message: err.message || "Some error occurred while creating the Cart."
             });
           })
       }).catch(err => {
@@ -231,8 +230,7 @@ const signIn = async function (req, res) {
   const user = await User.findOne({ where: { email: req.body.email } });
   if (!user) return res.status(400).json({ error: 'user not found' });
   // check user password with hashed password stored in the database
-  const validPassword = await bcrypt.compare(req.body.password, user.password
-  );
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) return res.status(400).json({
     error: 'Invalid Password'
   });

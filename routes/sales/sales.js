@@ -1,14 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers')
+const isAuth = require('../../middleware/Auth');
+const isAdmin = require('../../middleware/isAdmin');
 
-router.get('/', controller.sales.getAllSales)
-router.get('/:id', controller.sales.getSaleByID)
+router.get('/', [isAuth], controller.sales.getAllSales)
+router.get('/:id', [isAuth], controller.sales.getSaleByID)
 
-router.post('/', controller.sales.addSale)
+router.post('/', [isAdmin], controller.sales.addSale)
 
-router.put('/:id', controller.sales.updateSale)
+router.put('/:id', [isAdmin], controller.sales.updateSale)
 
-router.delete('/:id', controller.sales.deleteSaleByID)
+router.delete('/:id', [isAdmin], controller.sales.deleteSaleByID)
 
 module.exports = router;
