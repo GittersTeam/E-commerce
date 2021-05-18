@@ -4,11 +4,7 @@ const router = express.Router();
 const isAdmin = require('../middleware/isAdmin');
 const usersRouter = require('./users/users');
 const customerRouter = require('./customers/customer')
-<<<<<<< HEAD
 const adminRouter = require("./admins/admin")
-=======
-const registerRouter = require("./registrations/register")
->>>>>>> e777f40b349723f351ac768c63751ac6b03e5b59
 const addressRouter = require('./addresses/address');
 const cartRouter = require('./carts/carts');
 const orderRouter = require('./orders/orders');
