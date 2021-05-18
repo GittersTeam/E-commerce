@@ -1,4 +1,6 @@
 const db = require("../../models");
+const user = require("../../models/users/user");
+const userCont = require("../../controllers/users/userController")
 const Product = db.products;
 const Subcategory = db.subcategories;
 const Category = db.categories;
@@ -134,14 +136,20 @@ const deleteAllProducts = function (req, res) {
             });
         });
 }
-const getAllProducts = function (req, res) {
-    const user = db.users
-    var condition = {}
-    if ((req.user == null) || (req.user != null && req.user.userType != 'Admin')) {
-        condition.isPublished = true
+const getAllProducts = async function (req, res) {
+    const brandID = req.params.brandID ? req.params.brandID : "";
+    // const brand = await Brand.findOne({ where: { brandID: brandID } })
+    const token = req.headers['authorization'];
+    var users = userCont.parseJwt(token);
+    var condition = { isPublished: true }
+    if (token != null) {
+        if ((users != null && users.userType == 'Admin')) {
+            condition = {}
+        }
     }
-    console.log(req.user.userType)
+    console.log(users.userType)
 
+    // if (req.params == brand.name) {
     Product.findAll({
         where: condition
     })
@@ -161,4 +169,11 @@ const getAllProducts = function (req, res) {
 
 }
 
-module.exports = { getAllProducts, addProduct, deleteProductByID, updateProduct, getProductByID, deleteAllProducts };
+module.exports = {
+    getAllProducts,
+    addProduct,
+    deleteProductByID,
+    updateProduct,
+    getProductByID,
+    deleteAllProducts
+};
