@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const isCustomer = require('../middleware/isCustomer');
-const isAuth = require('../middleware/Auth');
 const isAdmin = require('../middleware/isAdmin');
 const usersRouter = require('./users/users');
 const customerRouter = require('./customers/customer')
-const registerRouter = require("./registrations/register")
+const adminRouter = require("./admins/admin")
 const addressRouter = require('./addresses/address');
 const cartRouter = require('./carts/carts');
 const orderRouter = require('./orders/orders');
@@ -25,8 +23,8 @@ const authRouter = require('./auth/auth')
 
 router.use('/auth', authRouter)
 router.use('/addresses', addressRouter);
-router.use('/registers', [isAdmin], registerRouter);
-router.use('/customers', customerRouter);
+router.use('/admins',[isAdmin], adminRouter);
+router.use('/customers',customerRouter);
 router.use('/users', usersRouter);
 //router.use('/logins',loginRouter)
 router.use('/departments', departmentsRouter);

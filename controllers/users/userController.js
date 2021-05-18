@@ -226,25 +226,26 @@ const signUp = async(req, res) => {
         });
 }
 
-const signIn = async function(req, res) {
-    const user = await User.findOne({ where: { email: req.body.email } });
-    if (!user) return res.status(400).json({ error: 'user not found' });
-    // check user password with hashed password stored in the database
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.status(400).json({
-        error: 'Invalid Password'
-    });
+const signIn = async function (req, res) {
+  const user = await User.findOne({ where:{email: req.body.email} });
+  if (!user) return res.status(400).json({ error: 'user not found' });
+  // check user password with hashed password stored in the database
+  const validPassword = await bcrypt.compare(req.body.password, user.password
+ );
+  if (!validPassword) return res.status(400).json({ error: 'Invalid Password'
+ });
+var object ={
+  userID:user.userID,
+  userType:user.userType
+}
 
-    var token = jwt.sign({
-        userID: user.userID,
-        userType: user.userType
-    }, process.env.JWT_SECRET, {})
+if(user.userType == 'Customer'){
+  const customer = await Customer.findOne({ where:{userID: user.userID} });
+  object["customerID"]= customer.customerID
+  object["cartID"] = customer.cartID
+}
 
-    if (user.userType == 'Customer') {
-        const customer = await Customer.findOne({ where: { userID: user.userID } });
-        token.customerID = customer.customerID
-        token.cartID = customer.cartID
-    }
+const token = jwt.sign(object, process.env.JWT_SECRET,{})
 
     res.json({
         data: 'singin success',
