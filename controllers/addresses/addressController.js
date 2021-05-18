@@ -40,24 +40,38 @@ const getAddressForOneCustomerByID = (req, res) => { //is customer
         });
 }
 
-const addAddress = (req, res) => { // is customer
-
-    const address = {
-        addressLine1: req.body.addressLine1,
-        addressLine2: req.body.addressLine2,
-        city: req.body.city,
-        customerID: req.customer.customerID,
-        postalCode: req.body.postalCode,
-    };
-    Address.create(address)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
+const addAddress = async (req, res) => { // is customer
+    const customer = await Customer.findOne({
+        where:{customerID: req.customer.customerID}           
+        }).then(num=>{
+            if(num == null){
+                res.send({
+                    msg: "Customer not found "
+                })
+            }else{
+                const address = {
+                    addressLine1: req.body.addressLine1,
+                    addressLine2: req.body.addressLine2,
+                    city: req.body.city,
+                    customerID: req.customer.customerID,
+                    postalCode: req.body.postalCode,
+                };
+                Address.create(address)
+                    .then(data => {
+                        res.send(data);
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message: err.message || "Some error occurred while creating the address."
+                        });
+                    });
+            }
+        }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the address."
             });
         });
+   
 }
 const updateAddress = (req, res) => {
 
