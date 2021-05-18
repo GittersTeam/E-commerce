@@ -16,13 +16,8 @@ const verifyToken = async (req, res, next) => {
  // const verified = jwt.verify(token, process.env.JWT_SECRET);
  //this part to get authorized user data
  var userData = userController.parseJwt(bearerToken);
-  const user = await User.findOne({ where:{userID: userData.id} });
-//  req.user = user;
- const customer = await Customer.findOne({ where:{userID: userData.id} });
- req.customer = customer
-//  console.log(user)
-//  console.log(customer)
- if(user.userType == 'Customer')
+ req.customer = userData
+ if(userData.userType == 'Customer')
  next() // continuous;
  else
  res.status(300).json({error: 'You are not authorized as Customer'});

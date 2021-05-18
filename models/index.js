@@ -32,16 +32,19 @@ db.customers = require("./customers/customer")(sequelize, Sequelize);
 db.products = require("./products/product.js")(sequelize, Sequelize);
 db.brands = require("./brands/brand.js")(sequelize, Sequelize);
 db.packages = require("./packages/package.js")(sequelize, Sequelize);
-db.departments = require("./departments/department.js")(sequelize, Sequelize); 
-db.categories = require("./categories/category.js")(sequelize, Sequelize); 
-db.subcategories = require("./subcategories/subcategory.js")(sequelize, Sequelize); 
+db.departments = require("./departments/department.js")(sequelize, Sequelize);
+db.categories = require("./categories/category.js")(sequelize, Sequelize);
+db.subcategories = require("./subcategories/subcategory.js")(sequelize, Sequelize);
 //RelationShip Schema
 
-db.products.belongsTo(db.brands, { foreignKey: 'brandID' });
-db.brands.hasMany(db.products, { foreignKey: 'brandID' });
+db.products.belongsTo(db.brands, { foreignKey: 'brandID', as: 'brand' });
+db.brands.hasMany(db.products, { foreignKey: 'brandID', as: 'products' });
 
-db.products.belongsToMany(db.packages, { through: 'packageProducts', foreignKey: 'productID' });
-db.packages.belongsToMany(db.products, { through: 'packageProducts', foreignKey: 'packageID' });
+const packageProducts = sequelize.define('packageproducts', {}, { timestamps: true });
+db.packageProducts = packageProducts
+
+db.products.belongsToMany(db.packages, { through: packageProducts, foreignKey: 'productID' });
+db.packages.belongsToMany(db.products, { through: packageProducts, foreignKey: 'packageID' });
 
 
 db.departments.hasMany(db.categories, { foreignKey: 'departmentId', as: 'categories' })
@@ -49,10 +52,10 @@ db.categories.belongsTo(db.departments, { foreignKey: 'departmentId', as: 'depar
 db.categories.hasMany(db.subcategories, { foreignKey: 'categoryId', as: 'subcategories' })
 db.subcategories.belongsTo(db.categories, { foreignKey: 'categoryId', as: 'category' })
 
-db.addresses.belongsTo(db.customers, { foreignKey: 'customerID' });
-db.customers.hasMany(db.addresses, { foreignKey: 'customerID' });
-db.customers.belongsTo(db.users, { foreignKey: 'userID' });
-db.users.hasOne(db.customers, { foreignKey: 'userID' });
+db.addresses.belongsTo(db.customers, { foreignKey: 'customerID', as: 'customer' });
+db.customers.hasMany(db.addresses, { foreignKey: 'customerID', as: 'addresses' });
+db.customers.belongsTo(db.users, { foreignKey: 'userID', as: 'user' });
+db.users.hasOne(db.customers, { foreignKey: 'userID', as: 'customer' });
 
 db.subcategories.hasMany(db.products, { foreignKey: 'subcategoryId', as: 'products' })
 db.products.belongsTo(db.subcategories, { foreignKey: 'subcategoryId', as: 'subcategory' })
@@ -66,8 +69,8 @@ db.reviews.belongsTo(db.products, { foreignKey: 'productID', as: 'products' })
 db.customers.hasMany(db.reviews, { foreignKey: 'customerID', as: 'reviews' })
 db.reviews.belongsTo(db.customers, { foreignKey: 'customerID', as: 'customers' })
 
-db.carts.belongsTo(db.customers, { foreignKey: 'customerID' });
-db.customers.hasOne(db.carts, { foreignKey: 'cartID' });
+db.customers.belongsTo(db.carts, { foreignKey: 'cartID', as: 'cart' });
+db.carts.hasOne(db.customers, { foreignKey: 'cartID', as: 'customer' });
 
 db.customers.hasMany(db.orders, { foreignKey: 'customerID', as: 'orders' })
 db.orders.belongsTo(db.customers, { foreignKey: 'customerID', as: 'customers' })
@@ -78,10 +81,8 @@ const dealProductPrice = sequelize.define('dealProductPrice', {
         allowNull: false,
     }
 }, { timestamps: true });
+db.dealProductPrice = dealProductPrice
 db.flashDeals.belongsToMany(db.products, { through: dealProductPrice, foreignKey: 'flashDealID' });
 db.products.belongsToMany(db.flashDeals, { through: dealProductPrice, foreignKey: 'productID' });
-
-
-
 
 module.exports = db;

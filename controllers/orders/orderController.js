@@ -1,15 +1,18 @@
 var express = require('express');
+const { orders, customers } = require('../../models');
 const db = require("../../models");
-const Order = db.order;
-const Cart = db.cart;
+const Order = db.orders;
+const Cart = db.carts;
+const Customer=db.customers;
 
 const Op = db.Sequelize.Op;
 const CreateOrder=function(req, res){
        
        const order= {
               OrderDate:new Date(),
-              customerID: req.body.customerID,
-              paymentStatus:req.body.paymentStatus,
+              customerID: req.customer.customerID,
+              paymentStatus:"pending",
+              OrderStatus:"pending",
               products:req.body.products,
               packages:req.body.packages
        
@@ -31,7 +34,8 @@ const CreateOrder=function(req, res){
   
 const getOrders=function(req, res){
 
-  Order.findAll()
+  Order.findAll({ include:{model:Customer,as:'customers'}})
+  
     .then(data => {
       res.send(data);
     })
@@ -46,7 +50,9 @@ const getOrders=function(req, res){
    const GetorderByID= function(req, res){
  
 
-      Order.findByPk(req.params.id)
+      Order.findByPk( { where: {customerID:req.userData.customerID} ,
+          include:{model:customers,as:'customers'}})
+      
         .then(data => {
           res.send(data);
         })
@@ -58,31 +64,12 @@ const getOrders=function(req, res){
         });
        
     }
-//     const CreateRoom=function(req, res){
 
-//         const room= {
-//           room_ID: req.body.room_ID,
-//           room_type: req.body.room_type,
-//           room_floor: req.body.room_floor,
-//           room_Number:req.body.room_Number,
-//           Avaliable:true
-          
-//         };
-//         Rooms.create(room)
-//         .then(data => {
-//           res.send(data);
-//         })
-//         .catch(err => {
-//           res.status(500).send({
-//             message:
-//               err.message || "Some error occurred while creating the room."
-//           });
-//         });}
        
         const updateOrder=function(req, res){
-      const id = req.params.id;
+     ;
      Order.update(req.body, {
-        where: { id: id }
+        where:  { customerID:req.userData.customerID }
       })
         .then(num => {
           if (num == 1) {
@@ -98,17 +85,16 @@ const getOrders=function(req, res){
       
         .catch(err => {
           res.status(500).send({
-            message: "Error updating order with id=" + id
+            message: "Error updating order with id=" + customerID
           });
         });
            
         }
        const DeleteOrder = function(req, res){
 
-          const id = req.params.id;
-        
+       
           Order.destroy({
-            where: { id: id }
+         where: { customerID:req.userData.customerID }
           })
             .then(num => {
               if (num == 1) {
@@ -123,7 +109,7 @@ const getOrders=function(req, res){
             })
             .catch(err => {
               res.status(500).send({
-                message: "Error deleting an order with id=" + id
+                message: "Error deleting an order with id=" + customerID
               });
             });
            

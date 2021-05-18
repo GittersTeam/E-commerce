@@ -1,14 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const isCustomer = require('../middleware/isCustomer');
-const isAuth = require('../middleware/Auth');
 const isAdmin = require('../middleware/isAdmin');
-
 const usersRouter = require('./users/users');
 const customerRouter = require('./customers/customer')
-//const loginRouter = require("./logins/login")
-const registerRouter = require("./registrations/register")
+const adminRouter = require("./admins/admin")
 const addressRouter = require('./addresses/address');
 const cartRouter = require('./carts/carts');
 const orderRouter = require('./orders/orders');
@@ -20,15 +16,14 @@ const advertisementsRouter = require('./advertisements/advertisements')
 const reviewsRouter = require('./reviews/reviews')
 const uploadsRouter = require('./uploads/uploads')
 const flashDealsRouter = require('./flashDeals/flashDeals')
-const dealProductsRouter = require('./flashDeals/dealProducts')
 const departmentsRouter = require('./departments/departments');
 const categoriesRouter = require('./categories/categories');
 const subcategoriesRouter = require('./subcategories/subcategories');
-const authRouter = require ('./auth/auth')
+const authRouter = require('./auth/auth')
 
-router.use('/auth',authRouter)
+router.use('/auth', authRouter)
 router.use('/addresses', addressRouter);
-router.use('/registers',[isAdmin] ,registerRouter);
+router.use('/admins',[isAdmin], adminRouter);
 router.use('/customers',customerRouter);
 router.use('/users', usersRouter);
 //router.use('/logins',loginRouter)
@@ -36,9 +31,8 @@ router.use('/departments', departmentsRouter);
 router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter);
 router.use('/sales', salesRouter);
-router.use('/flash-deals/products', dealProductsRouter);
 router.use('/flash-deals', flashDealsRouter);
-router.use('/uploads', uploadsRouter);
+router.use('/uploads', [isAdmin], uploadsRouter);
 router.use('/advertisements', advertisementsRouter);
 router.use('/reviews', reviewsRouter);
 router.use('/carts', cartRouter);

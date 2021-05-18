@@ -1,11 +1,12 @@
 var express = require('express');
 const db = require("../../models");
-const Cart = db.cart;
+const Cart = db.carts;
 const Op = db.Sequelize.Op;
-  
-const getallProduct=function(req, res){
 
-  Cart.findAll()
+const getCartByID=function(req, res){
+ 
+  Cart.findOne({where:{ cartID:req.userData.cartID} })
+  
     .then(data => {
       res.send(data);
     })
@@ -17,46 +18,11 @@ const getallProduct=function(req, res){
     });
   }
 
-  const FindProductByID= function(req, res){
  
-
-      Cart.findByPk(req.params.id)
-        .then(data => {
-          res.send(data);
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred ."
-          });
-        });
-       
-    }
-    const CreateCart=function(req, res){
-
-        const cart= {
-          products: req.body.products,
-          packages:req.body.packages
-
-        };
-        Cart.create(cart)
-        .then(data => {
-          res.send(data);
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the room."
-          });
-        });}
-       
-       const updateCart=function(req, res){
-
-        
-      const id = req.params.id;
- 
+   const updateCartByID=function(req, res){
+    
     Cart.update(req.body, {
-        where: { id: id }
+      where:{cartID:req.userData.cartID}
       })
         .then(num => {
           if (num == 1) {
@@ -65,41 +31,15 @@ const getallProduct=function(req, res){
             });
           } else {
             res.send({
-              message: 'Cannot cart a room with id=${id}'
+              message: 'Cannot update a cart with id=${id}'
             });
           }
         })
       
         .catch(err => {
           res.status(500).send({
-            message: "Error updating Student with id=" + id
+            message: "Error updating cart with id=" + id
           });
-        });
-           
-   }
-       const deleteProduct = function(req, res){
-      
-          const id = req.params.id;
-        
-          Cart.destroy({
-            where: { id : id }
-          })
-            .then(num => {
-              if (num == 1) {
-                res.send({
-                  message: "Product was deleted successfully."
-                });
-              } else {
-                res.send({
-                  message: 'Cannot delete Product with id=${id}.'
-                });
-              }
-            })
-            .catch(err => {
-              res.status(500).send({
-                message: "Error deleting a Product with id=" + id
-              });
-            });
-           
+        });  
         }
-         module.exports = {CreateCart,getallProduct,deleteProduct,updateCart,FindProductByID}
+         module.exports = {getCartByID,updateCartByID}

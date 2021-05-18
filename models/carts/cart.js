@@ -6,15 +6,6 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
     },
-    customerID: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      allowNull: false,
-      references: {
-        model: "customers",
-        key: "customerID"
-      }
-    },
     products: {
       type: Sequelize.JSON,
 

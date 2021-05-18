@@ -4,12 +4,14 @@ var router = express.Router();
 const db = require("../../models");
 const order = db.order;
 const controller=require("../../controllers");
-
- router.post('/', controller.orders.CreateOrder);
- router.get('/', controller.orders.getOrders);
- router.get('/:id', controller.orders.GetorderByID);
-router.put('/:id',controller.orders.updateOrder);
-router.delete('/:id',controller.orders.DeleteOrder);
+const isAuth=require('../../middleware/auth');
+const isCustomer=require('../../middleware/isCustomer');
+const isAdmin=require('../../middleware/isAdmin');
+ router.post('/',[isCustomer], controller.orders.CreateOrder);
+ router.get('/', [isAuth],controller.orders.getOrders);
+ router.get('/', [isAuth],controller.orders.GetorderByID);
+router.put('/:id',[isAuth],controller.orders.updateOrder);
+router.delete('/:id',[isAuth],controller.orders.DeleteOrder);
 
 
 module.exports = router;

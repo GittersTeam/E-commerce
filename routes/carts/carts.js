@@ -4,12 +4,13 @@ var router = express.Router();
 const db = require("../../models");
 const Cart = db.carts;
 const controller=require("../../controllers");
+const isAuth=require('../../middleware/auth');
+//const isCustomer=require('../../middleware/isCustomer');
+const isAdmin=require('../../middleware/isAdmin');
 
-router.post('/', controller.carts.CreateCart);
- router.get('/', controller.carts.getallProduct);
- router.delete('/:id', controller.carts.deleteProduct);
-  router.put('/:id', controller.carts.updateCart);
-  router.get('/:id', controller.carts.FindProductByID);
+ router.get('/',[isAuth], controller.carts.getCartByID);
+  router.put('/',[isAuth], controller.carts.updateCartByID);
+  
 
   
 

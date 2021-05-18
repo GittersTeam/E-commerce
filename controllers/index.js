@@ -2,7 +2,7 @@ const users = require('./users/userController')
 const customers = require('./customers/customerController')
 const logins = require('./logins/loginController')
 const addresses = require('./addresses/addressController')
-const registrations = require('./registrations/registerController')
+const admins = require('./admins/adminController')
 const products = require('./products/productController')
 const brands = require('./brands/brandController')
 const packages = require('./packages/packageController')
@@ -16,7 +16,6 @@ const sales = require('./sales/salesController')
 const reviews = require('./reviews/reviewsController')
 const uploads = require('./uploads/uploadsController')
 const flashDeals = require('./flashDeals/flashDealsController')
-const dealProducts = require('./flashDeals/dealProductsController')
 
 module.exports = {
   departments,
@@ -26,7 +25,6 @@ module.exports = {
   sales,
   reviews,
   flashDeals,
-  dealProducts,
   uploads,
   orders,
   carts,
@@ -37,6 +35,6 @@ module.exports = {
   addresses,
   customers,
   logins,
-  registrations
+  admins
 
 }
