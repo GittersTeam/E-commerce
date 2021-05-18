@@ -235,16 +235,18 @@ const signIn = async function (req, res) {
  );
   if (!validPassword) return res.status(400).json({ error: 'Invalid Password'
  });
+var object ={
+  userID:user.userID,
+  userType:user.userType
+}
 
- var token = jwt.sign({
-  userID: user.userID,
-  userType: user.userType}, process.env.JWT_SECRET,{})
+if(user.userType == 'Customer'){
+  const customer = await Customer.findOne({ where:{userID: user.userID} });
+  object["customerID"]= customer.customerID
+  object["cartID"] = customer.cartID
+}
 
- if(user.userType == 'Customer'){
- const customer = await Customer.findOne({ where:{userID: user.userID} });
- token.customerID= customer.customerID
- token.cartID = customer.cartID
- }
+const token = jwt.sign(object, process.env.JWT_SECRET,{})
 
  res.json({
   data: 'singin success',

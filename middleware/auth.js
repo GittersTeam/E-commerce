@@ -18,6 +18,7 @@ const verifyToken = async (req, res, next) => {
  
  var userData = userController.parseJwt(bearerToken);
  req.userData = userData
+ console.log(userData)
  next() // continuamos;
  } catch (error) {
  res.status(400).json({error: 'token not valid'});

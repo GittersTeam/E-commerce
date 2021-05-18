@@ -2,7 +2,7 @@ const users = require('./users/userController')
 const customers = require('./customers/customerController')
 const logins = require('./logins/loginController')
 const addresses = require('./addresses/addressController')
-const registrations = require('./registrations/registerController')
+const admins = require('./admins/adminController')
 const products = require('./products/productController')
 const brands = require('./brands/brandController')
 const packages = require('./packages/packageController')
@@ -37,6 +37,6 @@ module.exports = {
   addresses,
   customers,
   logins,
-  registrations
+  admins
 
 }
