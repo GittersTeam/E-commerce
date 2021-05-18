@@ -9,7 +9,10 @@ const Category = db.categories;
 const Department = db.departments;
 const Brand = db.brands;
 const User = db.users
-const jwt = require('jsonwebtoken')
+const Sales = db.sales;
+const FlashDeals = db.flashDeals
+const jwt = require('jsonwebtoken');
+const Op = db.Sequelize.Op;
 
 
 
@@ -47,8 +50,26 @@ const addProduct = (req, res) => {
 
 }
 const getProductByID = (req, res) => {
+
+    const token = req.headers['authorization'];
+    var condition = { isPublished: true }
+
+    if (token != null) {
+        const bearer = token.split(' ');
+        const bearerToken = bearer[1];
+        const verified = jwt.verify(bearerToken, process.env.JWT_SECRET);
+        var users = userCont.parseJwt(bearerToken);
+        if ((users != null && users.userType == 'Admin')) {
+            condition = {}
+        }
+    }
+
     Product.findOne({
-        where: { productID: req.params.id },
+        where: [
+            condition,
+            { productID: req.params.id }
+
+        ],
         include: [{
             model: Subcategory, as: 'subcategory',
             include: [{
@@ -58,30 +79,31 @@ const getProductByID = (req, res) => {
         },
         { model: Package, through: PackageProducts },
         { model: Brand, as: 'brand' },
-        ]
-    })
-        .then(data => {
-            if (data != null) {
-                data.photo = JSON.parse(data.photo)
-                res.send({
-                    data: data,
-                    msg: "The product was found successfully "
-                });
+        {
+            model: Sales, as: 'sales',
+            order: [
+                ['createdAt', 'DESC'],
+            ],
+            limit: 1
+        },
+        { model: FlashDeals, foreignKey: 'flashDealID', where: { 'endDate': { [Op.gte]: new Date() } }, },
+        ],
 
-            } else {
-                res.send({
-                    data: data,
-                    msg: "The product was not found"
-                });
-            }
+    })
+
+        .then(data => {
+            res.send({
+                'data': data,
+                'message': "Product retrieved successfully",
+                'status': 200
+            });
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving the product."
+                    err.message || "Some error occurred while retrieving product."
             });
         });
-
 }
 
 const updateProduct = (req, res) => {
@@ -170,9 +192,10 @@ const getAllProducts = async function (req, res) {
             condition = {}
         }
     }
-
     Product.findAll({
-        where: condition,
+        where: [
+            condition
+        ],
         include: [{
             model: Subcategory, as: 'subcategory',
             include: [{
@@ -182,7 +205,17 @@ const getAllProducts = async function (req, res) {
         },
         { model: Package, through: PackageProducts },
         { model: Brand, as: 'brand' },
-        ]
+        {
+            model: Sales, as: 'sales',
+            order: [
+                ['createdAt', 'DESC'],
+            ],
+            limit: 1
+
+        },
+        { model: FlashDeals, foreignKey: 'flashDealID', required: false, left: true, where: { 'endDate': { [Op.gte]: new Date() } }, },
+        ],
+
     })
 
         .then(data => {
