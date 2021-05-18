@@ -6,6 +6,7 @@ const Package = db.packages;
 const Subcategory = db.subcategories;
 const PackageProducts = db.packageProducts;
 const Category = db.categories;
+const Department = db.departments;
 const Brand = db.brands;
 const User = db.users
 const jwt = require('jsonwebtoken')
@@ -45,35 +46,18 @@ const addProduct = (req, res) => {
         });
 
 }
-// const getAllProducts = (req, res) => {
-//     Product.findAll({
-//         include: [
-//             { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts }, { model: Brand, as: 'brand' },
-//         ]
-//     })
-//         .then(data => {
-//             res.send({
-//                 'data': data,
-//                 'message': "list of products",
-//                 'status': 200
-//             });
-
-//         })
-//         .catch(err => {
-//             res.status(500).send({
-//                 message: err.message || "Some error occurred while retrieving products."
-//             });
-//         });
-
-
-// }
 const getProductByID = (req, res) => {
     Product.findOne({
         where: { productID: req.params.id },
-        include: [
-            { model: Subcategory, as: 'subcategory' },
-            { model: Package, through: PackageProducts },
-            { model: Brand, as: 'brand' },
+        include: [{
+            model: Subcategory, as: 'subcategory',
+            include: [{
+                model: Category, as: 'category',
+                include: [{ model: Department, as: 'department' }]
+            }],
+        },
+        { model: Package, through: PackageProducts },
+        { model: Brand, as: 'brand' },
         ]
     })
         .then(data => {
@@ -171,11 +155,12 @@ const deleteAllProducts = function (req, res) {
         });
 }
 const getAllProducts = async function (req, res) {
-    const brandID = req.query.brandID ? req.query.brandID : "";
-    // const brand = await Brand.findOne({ where: { brandID: brandID } })
-    const token = req.headers['authorization'];
+    const brandName = req.query.brandName ? req.query.brandName : "";
+    const department = req.query.department ? req.query.department : "";
 
+    const token = req.headers['authorization'];
     var condition = { isPublished: true }
+
     if (token != null) {
         const bearer = token.split(' ');
         const bearerToken = bearer[1];
@@ -188,10 +173,18 @@ const getAllProducts = async function (req, res) {
 
     Product.findAll({
         where: condition,
-        include: [
-            { model: Subcategory, as: 'subcategory' }, { model: Package, through: PackageProducts }, { model: Brand, as: 'brand' },
+        include: [{
+            model: Subcategory, as: 'subcategory',
+            include: [{
+                model: Category, as: 'category',
+                include: [{ model: Department, as: 'department' }]
+            }],
+        },
+        { model: Package, through: PackageProducts },
+        { model: Brand, as: 'brand' },
         ]
     })
+
         .then(data => {
             res.send({
                 'data': data,
