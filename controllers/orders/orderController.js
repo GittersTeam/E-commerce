@@ -34,7 +34,7 @@ const CreateOrder=function(req, res){
   
 const getOrders=function(req, res){
 
-  Order.findAll({ include:{model:Customer,as:'customers'}})
+  Order.findAll({ where: {customerID:req.userData.customerID}})
   
     .then(data => {
       res.send(data);
@@ -48,10 +48,8 @@ const getOrders=function(req, res){
   }
 
    const GetorderByID= function(req, res){
- 
-
-      Order.findByPk( { where: {customerID:req.userData.customerID} ,
-          include:{model:customers,as:'customers'}})
+      Order.findOne( { where: {customerID:req.userData.customerID ,id:req.params.id}} )
+        //  include:{model:customers,as:'customers'}})
       
         .then(data => {
           res.send(data);
@@ -67,9 +65,11 @@ const getOrders=function(req, res){
 
        
         const updateOrder=function(req, res){
-     ;
+       
+         
      Order.update(req.body, {
-        where:  { customerID:req.userData.customerID }
+        where:  { customerID:req.userData.customerID ,id:req.params.id }
+       
       })
         .then(num => {
           if (num == 1) {
@@ -91,10 +91,10 @@ const getOrders=function(req, res){
            
         }
        const DeleteOrder = function(req, res){
-
-       
+        console.log(req.params.id )
+        console.log(req.userData.customerID )
           Order.destroy({
-         where: { customerID:req.userData.customerID }
+         where: { customerID:req.userData.customerID ,id:req.params.id}
           })
             .then(num => {
               if (num == 1) {
