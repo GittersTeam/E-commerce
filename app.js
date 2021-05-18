@@ -9,7 +9,11 @@ var indexRouter = require('./routes/index');
 
 
 // connect to database
+var cors = require('cors');
 var app = express();
+
+app.use(cors());
+app.disable('etag');
 db.sequelize.sync({  })
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,13 +22,17 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
+app.get('/*', function(req, res, next){ 
+  res.setHeader('Last-Modified', (new Date()).toUTCString());
+  next(); 
+});
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
