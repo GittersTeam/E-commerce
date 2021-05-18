@@ -52,4 +52,4 @@ const adUpload = function(request, response, next) {
         });
     });
 }
-module.exports = { adUpload };
+module.exports = { adUpload: adUpload };

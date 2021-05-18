@@ -1,7 +1,7 @@
 const db = require("../../models");
 const Op = db.Sequelize.Op;
 const Sale = db.sales
-const getAllSales = async (req, res) => {
+const getAllSales = async(req, res) => {
     const sale = await Sale.findAll({
         order: [
             ['productID', 'ASC'],
@@ -14,7 +14,7 @@ const getAllSales = async (req, res) => {
     });
     var temp = [];
     var index = [];
-    sale.filter(function (item) {
+    sale.filter(function(item) {
         return temp.indexOf(item.productID) >= 0 ? false : index.push(item), temp.push(item.productID);
     });
     res.send({
@@ -29,13 +29,13 @@ const getAllSales = async (req, res) => {
 }
 const getSaleByID = (req, res) => {
     Sale.findOne({
-        where: {
-            id: req.params.id
-        },
-        // include:{
-        //     model:Products
-        // }
-    })
+            where: {
+                id: req.params.id
+            },
+            // include:{
+            //     model:Products
+            // }
+        })
         .then(data => {
             res.send({
                 "data": data,
@@ -86,8 +86,8 @@ const updateSale = (req, res) => {
     const id = req.params.id;
 
     Sale.update(req.body, {
-        where: { id: id }
-    })
+            where: { id: id }
+        })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -112,8 +112,8 @@ const deleteSaleByID = (req, res) => {
     const id = req.params.id;
 
     Sale.destroy({
-        where: { id: id }
-    })
+            where: { id: id }
+        })
         .then(num => {
             if (num == 1) {
                 res.send({
@@ -135,9 +135,9 @@ const deleteSaleByID = (req, res) => {
 
 
 module.exports = {
-    getAllSales,
-    getSaleByID,
-    addSale,
-    updateSale,
-    deleteSaleByID,
+    getAllSales: getAllSales,
+    getSaleByID: getSaleByID,
+    addSale: addSale,
+    updateSale: updateSale,
+    deleteSaleByID: deleteSaleByID,
 }
