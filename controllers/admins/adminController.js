@@ -5,6 +5,10 @@ const {
 const bcrypt = require('bcrypt')
 const db = require("../../models");
 const User = db.users;
+const Orders = db.orders;
+const Product = db.products;
+const Brands = db.brands;
+const Departments = db.departments;
 
 const addAdmin = async (req, res) => {
 
@@ -78,7 +82,36 @@ const getAdmin = (req, res) => {
      });
    });
 }
+const getStatistic = (req, res) => {
+    var statistic = {
+      numOfProducts:0,
+      numOfOrders: 0,
+      numOfDepartments:0,
+      numOfBrands:0,
+    }
+    Product.findAll().then((data)=>{
+      console.log(data.length)
+      statistic['numOfProducts'] = data.length
+      Orders.findAll().then((data)=>{
+        statistic['numOfOrders'] = data.length
+        Departments.findAll().then((data)=>{
+          statistic['numOfDepartments'] = data.length
+          Brands.findAll().then((data)=>{
+            statistic['numOfBrands'] = data.length
+              res.send({
+                data: statistic,
+              });
+          })
+        })
+      })
+    })
+    // statistic['numOfBrands'] = data.length > 1 ? data.length : 0
+    
+
+    
+}
 module.exports = {
   addAdmin:addAdmin,
-  getAdmin:getAdmin
+  getAdmin:getAdmin,
+  getStatistic
 }
