@@ -132,14 +132,14 @@ const deleteAllPackages = function (req, res) {
                 });
             } else {
                 res.send({
-                    message: `Cannot delete packages!`
+                    message: `Cannot delete packages. Maybe there are no packages to delete`
                 });
             }
 
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error deleting packages"
+                message: "Error deleting packages."
             });
         });
 }

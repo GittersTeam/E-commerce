@@ -5,7 +5,7 @@ const isAdmin = require('../../middleware/isAdmin')
 
 const controller = require("../../controllers");
 router.get('/', controller.brands.getAllBrands);
-router.get('/:id', [isAdmin], controller.brands.getBrandByID);
+router.get('/:id', controller.brands.getBrandByID);
 router.post('/', [isAdmin], controller.brands.addBrand);
 router.put('/:id', [isAdmin], controller.brands.updateBrand);
 router.delete('/', [isAdmin], controller.brands.deleteAllBrands);

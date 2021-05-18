@@ -28,7 +28,7 @@ const getAllBrands = (req, res) => {
         .then(data => {
             res.send({
                 'data': data,
-                'message': "list of brands",
+                'message': "List of brands",
                 'status': 200
             });
 
@@ -45,12 +45,21 @@ const getAllBrands = (req, res) => {
 const getBrandByID = (req, res) => {
     Brand.findOne({ where: { brandID: req.params.id } })
         .then(data => {
-            data.logo = JSON.parse(data.logo)
-            res.send({
-                data: data,
-                msg: "The brand was found successfully "
-            });
+            if (data != null) {
+
+                data.logo = JSON.parse(data.logo)
+                res.send({
+                    data: data,
+                    msg: "The brand was found successfully "
+                });
+            } else {
+                res.send({
+                    data: data,
+                    msg: "The brand was not found"
+                });
+            }
         })
+
         .catch(err => {
             res.status(500).send({
                 message:
@@ -106,16 +115,23 @@ const deleteBrandByID = (req, res) => {
             });
         });
 }
-const deleteAllBrands = function (req, res) {
+const deleteAllBrands= function (req, res) {
 
     Brand.destroy({
         where: {},
         truncate: false
     })
+
         .then(num => {
-            res.send({
-                message: `${num} Brands were deleted successfully!`
-            });
+            if (num == 1) {
+                res.send({
+                    message: `${num} brands were deleted successfully!`
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete brands. Maybe there are no brands to delete`
+                });
+            }
 
         })
         .catch(err => {
@@ -126,4 +142,12 @@ const deleteAllBrands = function (req, res) {
 }
 
 
-module.exports = { getAllBrands, addBrand, getBrandByID, deleteBrandByID, updateBrand, deleteAllBrands };
+module.exports =
+{
+    getAllBrands,
+    addBrand,
+    getBrandByID,
+    deleteBrandByID,
+    updateBrand,
+    deleteAllBrands
+};

@@ -41,13 +41,19 @@ const addProduct = (req, res) => {
 const getProductByID = (req, res) => {
     Product.findOne({ where: { productID: req.params.id } })
         .then(data => {
-            data.photo = JSON.parse(data.photo)
-            res.send({
-                data: data,
-                msg: "The product was found successfully "
-            });
+            if (data != null) {
+                data.photo = JSON.parse(data.photo)
+                res.send({
+                    data: data,
+                    msg: "The product was found successfully "
+                });
 
-
+            } else {
+                res.send({
+                    data: data,
+                    msg: "The product was not found"
+                });
+            }
         })
         .catch(err => {
             res.status(500).send({
@@ -111,9 +117,15 @@ const deleteAllProducts = function (req, res) {
         truncate: false
     })
         .then(num => {
-            res.send({
-                message: `${num} Products were deleted successfully!`
-            });
+            if (num == 1) {
+                res.send({
+                    message: `${num} products were deleted successfully!`
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete products. Maybe there are no products to delete`
+                });
+            }
 
         })
         .catch(err => {
@@ -122,7 +134,7 @@ const deleteAllProducts = function (req, res) {
             });
         });
 }
-const getAllProducts = function (req, res) {  
+const getAllProducts = function (req, res) {
     const user = db.users
     var condition = {}
     if ((req.user == null) || (req.user != null && req.user.userType != 'Admin')) {
