@@ -128,9 +128,9 @@ const deleteAdByID = (req, res) => {
 
 
 module.exports = {
-    getAllAds,
-    getAdByID,
-    addAd,
-    updateAd,
-    deleteAdByID,
+    getAllAds: getAllAds,
+    getAdByID: getAdByID,
+    addAd: addAd,
+    updateAd: updateAd,
+    deleteAdByID: deleteAdByID,
 }

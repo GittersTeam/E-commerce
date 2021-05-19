@@ -131,9 +131,9 @@ const deleteReviewByID = (req, res) => {
 
 
 module.exports = {
-    getAllReviewsByProductID,
-    getReviewByIDByProductID,
-    addReview,
-    updateReview,
-    deleteReviewByID,
+    getAllReviewsByProductID: getAllReviewsByProductID,
+    getReviewByIDByProductID: getReviewByIDByProductID,
+    addReview: addReview,
+    updateReview: updateReview,
+    deleteReviewByID: deleteReviewByID,
 }
