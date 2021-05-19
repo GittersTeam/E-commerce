@@ -178,17 +178,11 @@ const deleteAllProducts = function (req, res) {
 }
 const getAllProducts = async function (req, res) {
     const brandName = req.query.brandName ? req.query.brandName : null;
-    const departmentName = req.query.departmentName ? req.query.departmentName : null;
     var brandCondition = {}
     if (brandName != null) {
         brandCondition = { '$Brand.name$': { [Op.eq]: brandName } };
     }
-    var departmentCondition = {}
-    if (departmentName != null) {
-        departmentCondition = { name: departmentName }
-    };
 
-    console.log("sdfsdfdsfsf", brandCondition)
     const token = req.headers['authorization'];
     var condition = { isPublished: true }
 
@@ -209,7 +203,7 @@ const getAllProducts = async function (req, res) {
             model: Subcategory, as: 'subcategory',
             include: [{
                 model: Category, as: 'category',
-                include: [{ model: Department, as: 'department', where: { departmentCondition } }]
+                include: [{ model: Department, as: 'department' }]
             }],
         },
         { model: Package, through: PackageProducts },
