@@ -177,8 +177,11 @@ const deleteAllProducts = function (req, res) {
         });
 }
 const getAllProducts = async function (req, res) {
-    const brandName = req.query.brandName ? req.query.brandName : "";
-    const department = req.query.department ? req.query.department : "";
+    const brandName = req.query.brandName ? req.query.brandName : null;
+    var brandCondition = {}
+    if (brandName != null) {
+        brandCondition = { '$Brand.name$': { [Op.eq]: brandName } };
+    }
 
     const token = req.headers['authorization'];
     var condition = { isPublished: true }
@@ -194,7 +197,7 @@ const getAllProducts = async function (req, res) {
     }
     Product.findAll({
         where: [
-            condition
+            condition, brandCondition
         ],
         include: [{
             model: Subcategory, as: 'subcategory',
